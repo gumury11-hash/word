@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>단어 학습기</title>
+    <title>단어 학습</title>
     <style>
         :root {
             --bg-1: #fff9f3;
@@ -295,10 +295,11 @@
         }
 
         .word-title {
-            font-size: 17px;
+            font-size: 22px;
             font-weight: 800;
             color: #422c1d;
             word-break: break-all;
+            line-height: 1.4;
         }
 
         .btn-group {
@@ -320,20 +321,22 @@
         }
 
         .writing-area {
-            margin-top: 10px;
+            margin-top: 12px;
             display: flex;
             flex-direction: column;
         }
         .writing-area label {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--muted);
-            margin-bottom: 3px;
+            margin-bottom: 5px;
+            font-weight: 700;
         }
         .writing-input {
-            padding: 10px;
+            padding: 12px 14px;
             border: 1px dashed rgba(148, 163, 184, 0.9);
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 18px;
+            line-height: 1.4;
             box-sizing: border-box;
             background: rgba(255,255,255,0.85);
         }
@@ -770,6 +773,37 @@
         renderWordsAndHistory(words, langText, levelText, studyTypeText, situationText, selectedLang, selectedLevel, selectedStudyType, selectedSituation, true);
     }
 
+    function normalizeCheckText(value) {
+        return String(value || '').trim().replace(/\s+/g, ' ').toLowerCase();
+    }
+
+    function handleWritingInput(input, answerText) {
+        const typedValue = normalizeCheckText(input.value);
+        const targetValue = normalizeCheckText(answerText);
+
+        if (!typedValue) {
+            input.style.borderColor = 'rgba(148, 163, 184, 0.9)';
+            input.style.background = 'rgba(255,255,255,0.85)';
+            return;
+        }
+
+        if (typedValue === targetValue) {
+            input.style.borderColor = '#2f9e44';
+            input.style.background = 'rgba(232, 255, 239, 0.9)';
+
+            const nextInput = input.closest('.word-card')?.nextElementSibling?.querySelector('.writing-input');
+            if (nextInput) {
+                setTimeout(() => nextInput.focus(), 120);
+            } else {
+                input.blur();
+            }
+            return;
+        }
+
+        input.style.borderColor = 'rgba(148, 163, 184, 0.9)';
+        input.style.background = 'rgba(255,255,255,0.85)';
+    }
+
     function renderWordsAndHistory(words, langText, levelText, studyTypeText, situationText, langVal, levelVal, studyTypeVal, sitVal, saveHistory) {
         currentLoadedWords = words;
         const container = document.getElementById('wordListContainer');
@@ -780,7 +814,7 @@
             card.className = 'word-card';
             card.innerHTML = `
                 <div class="word-header">
-                    <span class="word-title">${index + 1}. ${item.word} <small style="font-weight:normal; color:#586a7b;">(${item.meaning || '예문'})</small></span>
+                    <span class="word-title">${index + 1}. ${item.word} <small style="font-weight:normal; color:#586a7b; font-size: 16px;">(${item.meaning || '예문'})</small></span>
                     <div class="btn-group">
                         <button onclick="speakText('${item.word}', '${langVal}')">▶ 듣기</button>
                         <button onclick="repeatSpeak('${item.word}', '${langVal}')">↻ 반복</button>
@@ -788,9 +822,15 @@
                 </div>
                 <div class="writing-area">
                     <label>따라 쓰기 연습:</label>
-                    <input type="text" class="writing-input" placeholder="여기에 적어보세요.">
+                    <input type="text" class="writing-input" placeholder="여기에 적어보세요." data-answer="${item.word}">
                 </div>
             `;
+
+            const writingInput = card.querySelector('.writing-input');
+            writingInput.addEventListener('input', function () {
+                handleWritingInput(this, this.dataset.answer);
+            });
+
             container.appendChild(card);
         });
 
