@@ -6,30 +6,30 @@
     <title>단어 학습기</title>
     <style>
         :root {
-            --bg-1: #edf3f8;
-            --bg-2: #d3dbe4;
-            --metal-1: #f9fbff;
-            --metal-2: #e3e9f0;
-            --metal-3: #c7d0dc;
-            --metal-4: #a1adbb;
-            --metal-5: #697888;
-            --steel-1: #4d5c6d;
-            --steel-2: #2d3744;
-            --steel-3: #1b2430;
-            --ice-1: #dfeaf8;
-            --ice-2: #bfd3ee;
-            --panel-edge: rgba(147, 166, 186, 0.85);
-            --panel-shadow: rgba(31, 41, 55, 0.12);
-            --text-color: #243041;
-            --muted: #5c6777;
-            --soft: #7c8797;
-            --primary-color: #435163;
-            --primary-hover: #1d2733;
-            --success-color: #586a7b;
-            --warning-color: #76859a;
-            --error-color: #b12d2d;
-            --button-text: #f8fbff;
-            --glow: rgba(136, 168, 214, 0.22);
+            --bg-1: #fff9f3;
+            --bg-2: #f6dcc2;
+            --metal-1: #fffdfb;
+            --metal-2: #f9eee3;
+            --metal-3: #f0d1ae;
+            --metal-4: #e7b884;
+            --metal-5: #b7773d;
+            --steel-1: #d88f4b;
+            --steel-2: #b96f2a;
+            --steel-3: #7d4314;
+            --ice-1: #fff1df;
+            --ice-2: #f7d9b5;
+            --panel-edge: rgba(219, 154, 95, 0.7);
+            --panel-shadow: rgba(108, 66, 27, 0.12);
+            --text-color: #3d2a1d;
+            --muted: #7d5943;
+            --soft: #a47a5a;
+            --primary-color: #d98a41;
+            --primary-hover: #b9691d;
+            --success-color: #d88d4a;
+            --warning-color: #e9b87d;
+            --error-color: #b14d2d;
+            --button-text: #fffaf6;
+            --glow: rgba(255, 184, 111, 0.24);
         }
 
         * {
@@ -76,7 +76,7 @@
         .control-panel,
         .word-card,
         .history-item {
-            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(228,234,240,0.92));
+            background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(250,238,223,0.94));
             border: 1px solid var(--panel-edge);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 10px 18px rgba(15, 23, 42, 0.04);
         }
@@ -100,11 +100,11 @@
         .writing-input {
             width: 100%;
             padding: 12px 13px;
-            border: 1px solid rgba(203, 213, 225, 0.8);
+            border: 1px solid rgba(221, 177, 128, 0.8);
             border-radius: 12px;
             font-size: 14px;
             color: var(--text-color);
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.92);
             box-sizing: border-box;
             outline: none;
         }
@@ -112,8 +112,8 @@
         .api-key-row input:focus,
         .form-group select:focus,
         .writing-input:focus {
-            border-color: rgba(107, 114, 128, 0.8);
-            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.08);
+            border-color: rgba(196, 120, 52, 0.8);
+            box-shadow: 0 0 0 3px rgba(233, 172, 109, 0.13);
         }
 
         .btn-api,
@@ -127,15 +127,15 @@
         }
 
         .btn-api {
-            background: linear-gradient(180deg, #dfeaf8, #aebed0);
+            background: linear-gradient(180deg, #fff2df, #f1c38d);
             color: var(--steel-3);
-            border: 1px solid rgba(132, 146, 166, 0.9);
+            border: 1px solid rgba(196, 124, 58, 0.9);
             padding: 12px;
             font-weight: 800;
             border-radius: 12px;
             cursor: pointer;
             width: 100%;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 10px 18px rgba(76, 92, 115, 0.12);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 10px 18px rgba(130, 89, 45, 0.12);
         }
         .btn-api:hover,
         .help-trigger-btn:hover,
@@ -157,9 +157,9 @@
         }
 
         .help-trigger-btn {
-            background: linear-gradient(180deg, #edf5ff, #d6e1ee);
+            background: linear-gradient(180deg, #fff6ec, #f7d6a7);
             color: var(--steel-3);
-            border: 1px solid rgba(143, 162, 186, 0.8);
+            border: 1px solid rgba(204, 139, 76, 0.8);
             padding: 6px 10px;
             font-size: 12px;
             border-radius: 999px;
@@ -181,7 +181,7 @@
         }
 
         .modal-content {
-            background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(241,245,249,0.9));
+            background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(255,244,233,0.95));
             padding: 20px;
             border-radius: 20px;
             max-width: 500px;
@@ -189,7 +189,7 @@
             box-shadow: 0 18px 30px rgba(15,23,42,0.12);
             position: relative;
             line-height: 1.6;
-            border: 1px solid rgba(203, 213, 225, 0.8);
+            border: 1px solid rgba(223, 176, 127, 0.8);
             box-sizing: border-box;
         }
 
@@ -247,30 +247,30 @@
         }
 
         .btn-load {
-            background: linear-gradient(180deg, var(--steel-1), var(--steel-2));
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-hover));
             color: var(--button-text);
             font-weight: 800;
             cursor: pointer;
             width: 100%;
             padding: 14px;
             box-sizing: border-box;
-            border: 1px solid rgba(123, 138, 156, 0.9);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 12px 20px rgba(45, 55, 68, 0.14);
+            border: 1px solid rgba(176, 108, 42, 0.9);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 12px 20px rgba(132, 84, 34, 0.14);
         }
-        .btn-load:disabled { background: linear-gradient(180deg, #dfe5ec, #c7d1db); color: #75839a; cursor: not-allowed; box-shadow: none; }
+        .btn-load:disabled { background: linear-gradient(180deg, #f3e1cf, #e7c19a); color: #8d6743; cursor: not-allowed; box-shadow: none; }
 
         .btn-all-repeat {
-            background: linear-gradient(180deg, #7a8695, #4f5d70);
+            background: linear-gradient(180deg, #efb877, #d7853c);
             color: var(--button-text);
             font-weight: 800;
             cursor: pointer;
             width: 100%;
             padding: 14px;
             box-sizing: border-box;
-            border: 1px solid rgba(123, 138, 156, 0.9);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 12px 20px rgba(99, 115, 136, 0.12);
+            border: 1px solid rgba(185, 113, 45, 0.9);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 12px 20px rgba(189, 127, 70, 0.14);
         }
-        .btn-all-repeat:disabled { background: linear-gradient(180deg, #dfe5ec, #c7d1db); color: #75839a; cursor: not-allowed; box-shadow: none; }
+        .btn-all-repeat:disabled { background: linear-gradient(180deg, #f3e1cf, #e7c19a); color: #8d6743; cursor: not-allowed; box-shadow: none; }
 
         .word-card {
             border-radius: 18px;
@@ -297,7 +297,7 @@
         .word-title {
             font-size: 17px;
             font-weight: 800;
-            color: #111827;
+            color: #422c1d;
             word-break: break-all;
         }
 
@@ -311,10 +311,10 @@
             padding: 8px 10px;
             font-size: 13px;
             cursor: pointer;
-            background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(219,226,234,0.96));
-            border: 1px solid rgba(164, 176, 192, 0.9);
+            background: linear-gradient(180deg, #fff8f0, #f3d5ae);
+            border: 1px solid rgba(204, 146, 86, 0.9);
             border-radius: 10px;
-            color: var(--steel-2);
+            color: #704a2f;
             font-weight: 800;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
         }
@@ -375,7 +375,7 @@
         .history-time {
             font-weight: 800;
             font-size: 14px;
-            color: #111827;
+            color: #54351f;
             margin-bottom: 2px;
             display: block;
         }
@@ -387,8 +387,8 @@
         }
 
         .btn-delete-icon {
-            background: linear-gradient(180deg, #f5f8fc, #dfe6ee);
-            border: 1px solid rgba(162, 173, 190, 0.8);
+            background: linear-gradient(180deg, #fffaf4, #f3d7b3);
+            border: 1px solid rgba(198, 156, 111, 0.8);
             color: var(--steel-3);
             font-size: 16px;
             cursor: pointer;
@@ -420,7 +420,7 @@
     <div id="helpModal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close" onclick="closeHelpModal()">✕</button>
-            <h3 style="margin-top: 0; color: #0284c7; font-size: 18px;">💡 API 키 발급 방법</h3>
+            <h3 style="margin-top: 0; color: #c96a29; font-size: 18px;">💡 API 키 발급 방법</h3>
             <ol style="padding-left: 20px; font-size: 13px;">
                 <li><strong>Google AI Studio 접속:</strong> (<a href="https://aistudio.google.com/" target="_blank">aistudio.google.com</a>) 로그인</li>
                 <li><strong>API 키 생성:</strong> 상단/좌측 <strong>'Get API key'</strong> 클릭</li>
@@ -433,12 +433,16 @@
         <div class="form-group">
             <label for="langSelect">언어 선택</label>
             <select id="langSelect">
-                <option value="en-US">영어</option>
+                <option value="en-US">영어 (미국)</option>
+                <option value="en-GB">영어 (영국)</option>
                 <option value="ja-JP">일본어</option>
-                <option value="zh-CN">중국어</option>
+                <option value="zh-CN">중국어 (간체)</option>
+                <option value="zh-TW">중국어 (번체)</option>
                 <option value="es-ES">스페인어</option>
                 <option value="fr-FR">프랑스어</option>
                 <option value="de-DE">독일어</option>
+                <option value="it-IT">이탈리아어</option>
+                <option value="pt-BR">포르투갈어</option>
             </select>
         </div>
 
@@ -457,7 +461,6 @@
                 <option value="word">단어</option>
                 <option value="phrase">표현</option>
                 <option value="sentence">문장</option>
-                <option value="listening">듣기</option>
             </select>
         </div>
 
@@ -468,6 +471,9 @@
                 <option value="business">비즈니스/회사</option>
                 <option value="daily">일상/식사</option>
                 <option value="emergency">비상/사건</option>
+                <option value="shopping">쇼핑/마트</option>
+                <option value="school">학교/학습</option>
+                <option value="health">건강/병원</option>
             </select>
         </div>
     </div>
@@ -496,97 +502,147 @@
 
     const studyTypeMap = {
         word: { label: '단어', build: (items) => items },
-        phrase: { label: '표현', build: (items) => items.map((item, idx) => ({ ...item, word: `${item.word} / ${item.meaning}` })) },
+        phrase: { label: '표현', build: (items) => items.map((item) => ({ ...item, word: `${item.word} / ${item.meaning}` })) },
         sentence: {
             label: '문장',
-            build: (items) => items.map((item, idx) => ({
+            build: (items) => items.map((item) => ({
                 ...item,
                 word: `${item.word}를(을) 활용한 문장 예시: "${item.word} is useful in this situation."`,
                 meaning: item.meaning
             }))
-        },
-        listening: { label: '듣기', build: (items) => items }
+        }
     };
 
     const wordDatabase = {
         travel: {
             beginner: [
-                {word: "Bus", meaning: "버스"}, {word: "Taxi", meaning: "택시"}, {word: "Map", meaning: "지도"}, 
-                {word: "Air", meaning: "항공"}, {word: "Fly", meaning: "날다"}, {word: "Bag", meaning: "가방"}, 
+                {word: "Bus", meaning: "버스"}, {word: "Taxi", meaning: "택시"}, {word: "Map", meaning: "지도"},
+                {word: "Air", meaning: "항공"}, {word: "Fly", meaning: "날다"}, {word: "Bag", meaning: "가방"},
                 {word: "Gate", meaning: "탑승구"}, {word: "Pass", meaning: "패스"}, {word: "Trip", meaning: "여행"}, {word: "Hotel", meaning: "호텔"},
                 {word: "Car", meaning: "자동차"}, {word: "Ship", meaning: "배"}, {word: "Tour", meaning: "관광"}, {word: "View", meaning: "전망"}
             ],
             intermediate: [
-                {word: "Airport", meaning: "공항"}, {word: "Passport", meaning: "여권"}, {word: "Ticket", meaning: "티켓"}, 
-                {word: "Luggage", meaning: "수하물"}, {word: "Subway", meaning: "지하철"}, {word: "Station", meaning: "역"}, 
+                {word: "Airport", meaning: "공항"}, {word: "Passport", meaning: "여권"}, {word: "Ticket", meaning: "티켓"},
+                {word: "Luggage", meaning: "수하물"}, {word: "Subway", meaning: "지하철"}, {word: "Station", meaning: "역"},
                 {word: "Journey", meaning: "여정"}, {word: "Tourist", meaning: "관광객"}, {word: "Booking", meaning: "예약"}, {word: "Customs", meaning: "세관"},
                 {word: "Platform", meaning: "승강장"}, {word: "Schedule", meaning: "시간표"}, {word: "Voucher", meaning: "할인권"}, {word: "Terminal", meaning: "터미널"}
             ],
             advanced: [
-                {word: "Destination", meaning: "목적지"}, {word: "Accommodation", meaning: "숙박시설"}, {word: "Transportation", meaning: "교통수단"}, 
-                {word: "Reservation", meaning: "정식예약"}, {word: "International", meaning: "국제적인"}, {word: "Sightseeing", meaning: "관광"}, 
+                {word: "Destination", meaning: "목적지"}, {word: "Accommodation", meaning: "숙박시설"}, {word: "Transportation", meaning: "교통수단"},
+                {word: "Reservation", meaning: "정식예약"}, {word: "International", meaning: "국제적인"}, {word: "Sightseeing", meaning: "관광"},
                 {word: "Embarkation", meaning: "탑승승선"}, {word: "Neighborhood", meaning: "인근지역"}, {word: "Identification", meaning: "신분증"}, {word: "Representative", meaning: "대표자"},
                 {word: "Expedition", meaning: "탐험여행"}, {word: "Globalized", meaning: "세계화된"}, {word: "Infrastructure", meaning: "기반시설"}
             ]
         },
         business: {
             beginner: [
-                {word: "Job", meaning: "직업"}, {word: "Boss", meaning: "상사"}, {word: "Desk", meaning: "책상"}, 
-                {word: "Plan", meaning: "계획"}, {word: "Goal", meaning: "목표"}, {word: "Team", meaning: "팀"}, 
+                {word: "Job", meaning: "직업"}, {word: "Boss", meaning: "상사"}, {word: "Desk", meaning: "책상"},
+                {word: "Plan", meaning: "계획"}, {word: "Goal", meaning: "목표"}, {word: "Team", meaning: "팀"},
                 {word: "Work", meaning: "근무"}, {word: "Sale", meaning: "판매"}, {word: "Cost", meaning: "비용"}, {word: "Task", meaning: "과제"},
                 {word: "Pay", meaning: "급여"}, {word: "Hire", meaning: "고용하다"}, {word: "Lead", meaning: "이끌다"}, {word: "Deal", meaning: "거래"}
             ],
             intermediate: [
-                {word: "Meeting", meaning: "회의"}, {word: "Project", meaning: "프로젝트"}, {word: "Manager", meaning: "매니저"}, 
-                {word: "Schedule", meaning: "일정"}, {word: "Contract", meaning: "계약서"}, {word: "Report", meaning: "보고서"}, 
+                {word: "Meeting", meaning: "회의"}, {word: "Project", meaning: "프로젝트"}, {word: "Manager", meaning: "매니저"},
+                {word: "Schedule", meaning: "일정"}, {word: "Contract", meaning: "계약서"}, {word: "Report", meaning: "보고서"},
                 {word: "Client", meaning: "고객"}, {word: "Budget", meaning: "예산"}, {word: "Startup", meaning: "스타트업"}, {word: "Colleague", meaning: "동료"},
                 {word: "Strategy", meaning: "전략"}, {word: "Proposal", meaning: "제안서"}, {word: "Deadline", meaning: "마감기한"}, {word: "Feedback", meaning: "피드백"}
             ],
             advanced: [
-                {word: "Negotiation", meaning: "협상"}, {word: "Presentation", meaning: "발표"}, {word: "Collaboration", meaning: "협업"}, 
-                {word: "Headquarters", meaning: "본사"}, {word: "Advertisement", meaning: "광고"}, {word: "Establishment", meaning: "설립"}, 
+                {word: "Negotiation", meaning: "협상"}, {word: "Presentation", meaning: "발표"}, {word: "Collaboration", meaning: "협업"},
+                {word: "Headquarters", meaning: "본사"}, {word: "Advertisement", meaning: "광고"}, {word: "Establishment", meaning: "설립"},
                 {word: "Professional", meaning: "전문가"}, {word: "Administrator", meaning: "관리자"}, {word: "Responsibility", meaning: "책임감"}, {word: "Characteristic", meaning: "특성"},
                 {word: "Corporation", meaning: "기업/법인"}, {word: "Multinational", meaning: "다국적의"}, {word: "Benchmarking", meaning: "벤치마킹"}
             ]
         },
         daily: {
             beginner: [
-                {word: "Milk", meaning: "우유"}, {word: "Water", meaning: "물"}, {word: "Bread", meaning: "빵"}, 
-                {word: "Rice", meaning: "쌀/밥"}, {word: "Fruit", meaning: "과일"}, {word: "Soup", meaning: "국물"}, 
+                {word: "Milk", meaning: "우유"}, {word: "Water", meaning: "물"}, {word: "Bread", meaning: "빵"},
+                {word: "Rice", meaning: "쌀/밥"}, {word: "Fruit", meaning: "과일"}, {word: "Soup", meaning: "국물"},
                 {word: "Fish", meaning: "생선"}, {word: "Meat", meaning: "고기"}, {word: "Egg", meaning: "계란"}, {word: "Salt", meaning: "소금"},
                 {word: "Fork", meaning: "포크"}, {word: "Spoon", meaning: "숟가락"}, {word: "Bowl", meaning: "그릇"}, {word: "Juice", meaning: "주스"}
             ],
             intermediate: [
-                {word: "Breakfast", meaning: "아침식사"}, {word: "Vegetable", meaning: "채소"}, {word: "Kitchen", meaning: "주방"}, 
-                {word: "Grocery", meaning: "식료품"}, {word: "Restaurant", meaning: "식당"}, {word: "Cooking", meaning: "요리"}, 
+                {word: "Breakfast", meaning: "아침식사"}, {word: "Vegetable", meaning: "채소"}, {word: "Kitchen", meaning: "주방"},
+                {word: "Grocery", meaning: "식료품"}, {word: "Restaurant", meaning: "식당"}, {word: "Cooking", meaning: "요리"},
                 {word: "Delicious", meaning: "맛있는"}, {word: "Schedule", meaning: "일정"}, {word: "Exercise", meaning: "운동"}, {word: "Clothing", meaning: "의류"},
                 {word: "Apartment", meaning: "아파트"}, {word: "Furniture", meaning: "가구"}, {word: "Medicine", meaning: "약품"}
             ],
             advanced: [
-                {word: "Supermarket", meaning: "대형마트"}, {word: "Environment", meaning: "환경"}, {word: "Neighborhood", meaning: "동네"}, 
-                {word: "Conversation", meaning: "대화"}, {word: "Organization", meaning: "조직"}, {word: "Manufacturer", meaning: "제조사"}, 
+                {word: "Supermarket", meaning: "대형마트"}, {word: "Environment", meaning: "환경"}, {word: "Neighborhood", meaning: "동네"},
+                {word: "Conversation", meaning: "대화"}, {word: "Organization", meaning: "조직"}, {word: "Manufacturer", meaning: "제조사"},
                 {word: "Relationship", meaning: "관계"}, {word: "Entertainment", meaning: "오락"}, {word: "Appreciation", meaning: "감사"}, {word: "Understanding", meaning: "이해"},
                 {word: "Establishment", meaning: "시설/기관"}, {word: "Transformation", meaning: "변화/변형"}
             ]
         },
         emergency: {
             beginner: [
-                {word: "Help", meaning: "도와줘"}, {word: "Fire", meaning: "불화재"}, {word: "Pain", meaning: "통증"}, 
-                {word: "Hurt", meaning: "다침"}, {word: "Lost", meaning: "길잃음"}, {word: "Run", meaning: "도망치다"}, 
+                {word: "Help", meaning: "도와줘"}, {word: "Fire", meaning: "불화재"}, {word: "Pain", meaning: "통증"},
+                {word: "Hurt", meaning: "다침"}, {word: "Lost", meaning: "길잃음"}, {word: "Run", meaning: "도망치다"},
                 {word: "Safe", meaning: "안전함"}, {word: "Call", meaning: "전화"}, {word: "Stop", meaning: "멈춰"}, {word: "Bad", meaning: "나쁨"},
                 {word: "Sick", meaning: "아픈"}, {word: "Bleed", meaning: "출혈하다"}, {word: "Trap", meaning: "갇히다"}, {word: "Fear", meaning: "공포"}
             ],
             intermediate: [
-                {word: "Hospital", meaning: "병원"}, {word: "Accident", meaning: "사고"}, {word: "Police", meaning: "경찰"}, 
-                {word: "Danger", meaning: "위험"}, {word: "Medicine", meaning: "약"}, {word: "Warning", meaning: "경고"}, 
+                {word: "Hospital", meaning: "병원"}, {word: "Accident", meaning: "사고"}, {word: "Police", meaning: "경찰"},
+                {word: "Danger", meaning: "위험"}, {word: "Medicine", meaning: "약"}, {word: "Warning", meaning: "경고"},
                 {word: "Ambulance", meaning: "구급차"}, {word: "Stolen", meaning: "도난"}, {word: "Urgent", meaning: "긴급"}, {word: "Shelter", meaning: "대피소"},
                 {word: "Disaster", meaning: "재난"}, {word: "Outbreak", meaning: "발병/발생"}, {word: "Security", meaning: "보안/경비"}, {word: "Casualty", meaning: "사상자"}
             ],
             advanced: [
-                {word: "Emergency", meaning: "비상사태"}, {word: "Concussion", meaning: "뇌진탕"}, {word: "Evacuation", meaning: "대피피난"}, 
-                {word: "Intervention", meaning: "조치개입"}, {word: "Unconscious", meaning: "의식불명"}, {word: "Catastrophe", meaning: "대참사"}, 
+                {word: "Emergency", meaning: "비상사태"}, {word: "Concussion", meaning: "뇌진탕"}, {word: "Evacuation", meaning: "대피피난"},
+                {word: "Intervention", meaning: "조치개입"}, {word: "Unconscious", meaning: "의식불명"}, {word: "Catastrophe", meaning: "대참사"},
                 {word: "Investigation", meaning: "조사수사"}, {word: "Pharmaceutical", meaning: "제약의"}, {word: "Recommendation", meaning: "권고"}, {word: "Vulnerability", meaning: "취약성"},
                 {word: "Contamination", meaning: "오염"}, {word: "Unpredictable", meaning: "예측불가능한"}, {word: "Paramedic", meaning: "응급구조사"}
+            ]
+        },
+        shopping: {
+            beginner: [
+                {word: "Price", meaning: "가격"}, {word: "Shop", meaning: "가게"}, {word: "Cart", meaning: "카트"},
+                {word: "Sale", meaning: "세일"}, {word: "Bag", meaning: "가방"}, {word: "Change", meaning: "거스름돈"},
+                {word: "Cash", meaning: "현금"}, {word: "Pay", meaning: "지불하다"}, {word: "Size", meaning: "사이즈"}, {word: "Receipt", meaning: "영수증"}
+            ],
+            intermediate: [
+                {word: "Discount", meaning: "할인"}, {word: "Product", meaning: "제품"}, {word: "Brand", meaning: "브랜드"},
+                {word: "Coupon", meaning: "쿠폰"}, {word: "Checkout", meaning: "계산대"}, {word: "Exchange", meaning: "교환"},
+                {word: "Quality", meaning: "품질"}, {word: "Delivery", meaning: "배달"}, {word: "Customer", meaning: "고객"}, {word: "Refund", meaning: "환불"}
+            ],
+            advanced: [
+                {word: "Merchandise", meaning: "상품"}, {word: "Promotion", meaning: "프로모션"}, {word: "Inventory", meaning: "재고"},
+                {word: "Warranty", meaning: "보증"}, {word: "Packaging", meaning: "포장"}, {word: "Authentication", meaning: "인증"},
+                {word: "Subscription", meaning: "구독"}, {word: "Recommendation", meaning: "추천"}, {word: "Affordability", meaning: "가성비"}, {word: "Competitor", meaning: "경쟁사"}
+            ]
+        },
+        school: {
+            beginner: [
+                {word: "Book", meaning: "책"}, {word: "Class", meaning: "수업"}, {word: "Teacher", meaning: "선생님"},
+                {word: "Student", meaning: "학생"}, {word: "Desk", meaning: "책상"}, {word: "Paper", meaning: "종이"},
+                {word: "Pen", meaning: "펜"}, {word: "Lesson", meaning: "수업"}, {word: "Test", meaning: "시험"}, {word: "Homework", meaning: "숙제"}
+            ],
+            intermediate: [
+                {word: "Campus", meaning: "캠퍼스"}, {word: "Lecture", meaning: "강의"}, {word: "Assignment", meaning: "과제"},
+                {word: "Dictionary", meaning: "사전"}, {word: "Presentation", meaning: "발표"}, {word: "Group", meaning: "그룹"},
+                {word: "Semester", meaning: "학기"}, {word: "Library", meaning: "도서관"}, {word: "Schedule", meaning: "시간표"}, {word: "Essay", meaning: "에세이"}
+            ],
+            advanced: [
+                {word: "Curriculum", meaning: "교육과정"}, {word: "Research", meaning: "연구"}, {word: "Seminar", meaning: "세미나"},
+                {word: "Dissertation", meaning: "논문"}, {word: "Academic", meaning: "학문적인"}, {word: "Evaluation", meaning: "평가"},
+                {word: "Scholarship", meaning: "장학금"}, {word: "Internship", meaning: "인턴십"}, {word: "Admission", meaning: "입학"}, {word: "Graduation", meaning: "졸업"}
+            ]
+        },
+        health: {
+            beginner: [
+                {word: "Doctor", meaning: "의사"}, {word: "Nurse", meaning: "간호사"}, {word: "Pain", meaning: "통증"},
+                {word: "Sleep", meaning: "잠"}, {word: "Water", meaning: "물"}, {word: "Medicine", meaning: "약"},
+                {word: "Healthy", meaning: "건강한"}, {word: "Cough", meaning: "기침"}, {word: "Fever", meaning: "열"}, {word: "Exercise", meaning: "운동"}
+            ],
+            intermediate: [
+                {word: "Hospital", meaning: "병원"}, {word: "Checkup", meaning: "검진"}, {word: "Symptoms", meaning: "증상"},
+                {word: "Diet", meaning: "식단"}, {word: "Stress", meaning: "스트레스"}, {word: "Recovery", meaning: "회복"},
+                {word: "Vaccination", meaning: "백신 접종"}, {word: "Treatment", meaning: "치료"}, {word: "Injury", meaning: "부상"}, {word: "Nutrition", meaning: "영양"}
+            ],
+            advanced: [
+                {word: "Diagnosis", meaning: "진단"}, {word: "Prevention", meaning: "예방"}, {word: "Therapy", meaning: "치료법"},
+                {word: "Rehabilitation", meaning: "재활"}, {word: "Prescription", meaning: "처방전"}, {word: "Immunity", meaning: "면역"},
+                {word: "Inflammation", meaning: "염증"}, {word: "Cardiology", meaning: "심장학"}, {word: "Neurology", meaning: "신경학"}, {word: "Wellbeing", meaning: "웰빙"}
             ]
         }
     };
