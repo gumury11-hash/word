@@ -3,21 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>단어 암기 학습기</title>
+    <title>단어 학습기</title>
     <style>
         :root {
-            --primary-color: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg-color: #f3f4f6;
-            --card-bg: #ffffff;
-            --text-color: #1f2937;
-            --border-color: #d1d5db;
-            --error-color: #dc2626;
+            --bg-1: #edf3f8;
+            --bg-2: #d3dbe4;
+            --metal-1: #f9fbff;
+            --metal-2: #e3e9f0;
+            --metal-3: #c7d0dc;
+            --metal-4: #a1adbb;
+            --metal-5: #697888;
+            --steel-1: #4d5c6d;
+            --steel-2: #2d3744;
+            --steel-3: #1b2430;
+            --ice-1: #dfeaf8;
+            --ice-2: #bfd3ee;
+            --panel-edge: rgba(147, 166, 186, 0.85);
+            --panel-shadow: rgba(31, 41, 55, 0.12);
+            --text-color: #243041;
+            --muted: #5c6777;
+            --soft: #7c8797;
+            --primary-color: #435163;
+            --primary-hover: #1d2733;
+            --success-color: #586a7b;
+            --warning-color: #76859a;
+            --error-color: #b12d2d;
+            --button-text: #f8fbff;
+            --glow: rgba(136, 168, 214, 0.22);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            background:
+                radial-gradient(circle at top, rgba(255,255,255,0.82), rgba(255,255,255,0) 36%),
+                linear-gradient(180deg, var(--bg-1), var(--bg-2));
             color: var(--text-color);
             margin: 0;
             padding: 10px;
@@ -29,10 +52,11 @@
             max-width: 100%;
             width: 100%;
             margin: 0 auto;
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(224,231,238,0.82));
+            padding: 18px 16px 16px;
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: 0 18px 30px var(--panel-shadow), inset 0 1px 0 rgba(255,255,255,0.85);
             box-sizing: border-box;
             overflow-x: hidden;
         }
@@ -41,15 +65,25 @@
             text-align: center;
             color: var(--primary-color);
             font-size: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             word-break: keep-all;
+            letter-spacing: 0.04em;
+            font-weight: 900;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+        }
+
+        .api-key-section,
+        .control-panel,
+        .word-card,
+        .history-item {
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(228,234,240,0.92));
+            border: 1px solid var(--panel-edge);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 10px 18px rgba(15, 23, 42, 0.04);
         }
 
         .api-key-section {
-            background: #fffbeb;
-            border: 1px solid #fde68a;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 18px;
             margin-bottom: 20px;
             box-sizing: border-box;
         }
@@ -61,26 +95,58 @@
             margin-top: 10px;
         }
 
-        .api-key-row input {
+        .api-key-row input,
+        .form-group select,
+        .writing-input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            padding: 12px 13px;
+            border: 1px solid rgba(203, 213, 225, 0.8);
+            border-radius: 12px;
             font-size: 14px;
+            color: var(--text-color);
+            background: rgba(255,255,255,0.9);
             box-sizing: border-box;
+            outline: none;
+        }
+
+        .api-key-row input:focus,
+        .form-group select:focus,
+        .writing-input:focus {
+            border-color: rgba(107, 114, 128, 0.8);
+            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.08);
+        }
+
+        .btn-api,
+        .help-trigger-btn,
+        .btn-load,
+        .btn-all-repeat,
+        .btn-group button,
+        .btn-delete-icon,
+        .modal-close {
+            transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
         }
 
         .btn-api {
-            background-color: #d97706;
-            color: white;
-            border: none;
+            background: linear-gradient(180deg, #dfeaf8, #aebed0);
+            color: var(--steel-3);
+            border: 1px solid rgba(132, 146, 166, 0.9);
             padding: 12px;
-            font-weight: bold;
-            border-radius: 6px;
+            font-weight: 800;
+            border-radius: 12px;
             cursor: pointer;
             width: 100%;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 10px 18px rgba(76, 92, 115, 0.12);
         }
-        .btn-api:hover { background-color: #b45309; }
+        .btn-api:hover,
+        .help-trigger-btn:hover,
+        .btn-load:hover,
+        .btn-all-repeat:hover,
+        .btn-group button:hover,
+        .modal-close:hover,
+        .btn-delete-icon:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.02);
+        }
 
         .api-status {
             margin-top: 8px;
@@ -91,21 +157,22 @@
         }
 
         .help-trigger-btn {
-            background-color: #0284c7;
-            color: white;
-            border: none;
+            background: linear-gradient(180deg, #edf5ff, #d6e1ee);
+            color: var(--steel-3);
+            border: 1px solid rgba(143, 162, 186, 0.8);
             padding: 6px 10px;
             font-size: 12px;
-            border-radius: 4px;
+            border-radius: 999px;
             cursor: pointer;
+            font-weight: 800;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
         }
-        .help-trigger-btn:hover { background-color: #0369a1; }
 
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(15, 23, 42, 0.38);
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -114,25 +181,32 @@
         }
 
         .modal-content {
-            background: white;
+            background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(241,245,249,0.9));
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 20px;
             max-width: 500px;
             width: 100%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 18px 30px rgba(15,23,42,0.12);
             position: relative;
             line-height: 1.6;
+            border: 1px solid rgba(203, 213, 225, 0.8);
             box-sizing: border-box;
         }
 
         .modal-close {
             position: absolute;
             top: 15px; right: 15px;
-            background: none;
-            border: none;
+            background: rgba(255,255,255,0.7);
+            border: 1px solid rgba(203,213,225,0.9);
             font-size: 18px;
             cursor: pointer;
             color: #4b5563;
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
         .control-panel {
@@ -141,9 +215,7 @@
             gap: 12px;
             margin-bottom: 15px;
             padding: 15px;
-            background: #f9fafb;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+            border-radius: 18px;
             box-sizing: border-box;
         }
 
@@ -153,18 +225,17 @@
         }
 
         label {
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 5px;
             font-size: 13px;
+            color: var(--text-color);
         }
 
         select, button {
             padding: 12px;
             font-size: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 12px;
             outline: none;
-            background-color: #fff;
             box-sizing: border-box;
         }
 
@@ -176,36 +247,35 @@
         }
 
         .btn-load {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: bold;
+            background: linear-gradient(180deg, var(--steel-1), var(--steel-2));
+            color: var(--button-text);
+            font-weight: 800;
             cursor: pointer;
             width: 100%;
             padding: 14px;
             box-sizing: border-box;
+            border: 1px solid rgba(123, 138, 156, 0.9);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 12px 20px rgba(45, 55, 68, 0.14);
         }
-        .btn-load:hover { background-color: var(--primary-hover); }
-        .btn-load:disabled { background-color: #9ca3af; cursor: not-allowed; }
+        .btn-load:disabled { background: linear-gradient(180deg, #dfe5ec, #c7d1db); color: #75839a; cursor: not-allowed; box-shadow: none; }
 
         .btn-all-repeat {
-            background-color: #059669;
-            color: white;
-            font-weight: bold;
+            background: linear-gradient(180deg, #7a8695, #4f5d70);
+            color: var(--button-text);
+            font-weight: 800;
             cursor: pointer;
             width: 100%;
             padding: 14px;
             box-sizing: border-box;
+            border: 1px solid rgba(123, 138, 156, 0.9);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 12px 20px rgba(99, 115, 136, 0.12);
         }
-        .btn-all-repeat:hover { background-color: #047857; }
-        .btn-all-repeat:disabled { background-color: #9ca3af; cursor: not-allowed; }
+        .btn-all-repeat:disabled { background: linear-gradient(180deg, #dfe5ec, #c7d1db); color: #75839a; cursor: not-allowed; box-shadow: none; }
 
         .word-card {
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 18px;
             padding: 15px;
             margin-bottom: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             box-sizing: border-box;
         }
 
@@ -226,8 +296,8 @@
 
         .word-title {
             font-size: 17px;
-            font-weight: bold;
-            color: var(--primary-color);
+            font-weight: 800;
+            color: #111827;
             word-break: break-all;
         }
 
@@ -241,11 +311,13 @@
             padding: 8px 10px;
             font-size: 13px;
             cursor: pointer;
-            background-color: #e5e7eb;
-            border: none;
-            border-radius: 4px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(219,226,234,0.96));
+            border: 1px solid rgba(164, 176, 192, 0.9);
+            border-radius: 10px;
+            color: var(--steel-2);
+            font-weight: 800;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
         }
-        .btn-group button:hover { background-color: #d1d5db; }
 
         .writing-area {
             margin-top: 10px;
@@ -254,26 +326,25 @@
         }
         .writing-area label {
             font-size: 11px;
-            color: #6b7280;
+            color: var(--muted);
             margin-bottom: 3px;
         }
         .writing-input {
-            width: 100%;
             padding: 10px;
-            border: 1px dashed var(--border-color);
-            border-radius: 4px;
+            border: 1px dashed rgba(148, 163, 184, 0.9);
+            border-radius: 10px;
             font-size: 15px;
             box-sizing: border-box;
+            background: rgba(255,255,255,0.85);
         }
 
         #historySection {
             margin-top: 30px;
-            border-top: 2px solid var(--border-color);
+            border-top: 2px solid rgba(203, 213, 225, 0.9);
             padding-top: 15px;
             box-sizing: border-box;
         }
 
-        /* 칸 구분 없이 깔끔하게 떨어지는 형태의 리스트 스타일 */
         .history-list {
             display: flex;
             flex-direction: column;
@@ -282,9 +353,7 @@
         }
 
         .history-item {
-            background: #f9fafb;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 16px;
             padding: 12px;
             display: flex;
             justify-content: space-between;
@@ -303,40 +372,38 @@
             opacity: 0.7;
         }
 
-        /* 날짜 시분초만 두껍게 표시 */
         .history-time {
-            font-weight: bold;
+            font-weight: 800;
             font-size: 14px;
-            color: var(--text-color);
+            color: #111827;
             margin-bottom: 2px;
             display: block;
         }
 
-        /* 선택한 내용을 작게 표시 */
         .history-desc {
             font-size: 11px;
-            color: #6b7280;
+            color: var(--muted);
             line-height: 1.3;
         }
 
-        /* 삭제 버튼만 유지 */
         .btn-delete-icon {
-            background: none;
-            border: none;
-            color: var(--error-color);
-            font-size: 18px;
+            background: linear-gradient(180deg, #f5f8fc, #dfe6ee);
+            border: 1px solid rgba(162, 173, 190, 0.8);
+            color: var(--steel-3);
+            font-size: 16px;
             cursor: pointer;
             padding: 6px 10px;
-            border-radius: 4px;
+            border-radius: 10px;
             flex-shrink: 0;
+            font-weight: 800;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
         }
-        .btn-delete-icon:hover { background-color: #fee2e2; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Gemini Flash-Lite 암기장</h1>
+    <h1>단어학습</h1>
 
     <div id="apiKeySection" class="api-key-section">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -364,15 +431,14 @@
 
     <div class="control-panel">
         <div class="form-group">
-            <label for="langSelect">TTS 언어 선택</label>
+            <label for="langSelect">언어 선택</label>
             <select id="langSelect">
-                <option value="en-US">영어 (English)</option>
-                <option value="ko-KR">한국어 (Korean)</option>
-                <option value="ja-JP">일본어 (Japanese)</option>
-                <option value="zh-CN">중국어 (Chinese)</option>
-                <option value="es-ES">스페인어 (Spanish)</option>
-                <option value="fr-FR">프랑스어 (French)</option>
-                <option value="de-DE">독일어 (German)</option>
+                <option value="en-US">영어</option>
+                <option value="ja-JP">일본어</option>
+                <option value="zh-CN">중국어</option>
+                <option value="es-ES">스페인어</option>
+                <option value="fr-FR">프랑스어</option>
+                <option value="de-DE">독일어</option>
             </select>
         </div>
 
@@ -382,6 +448,16 @@
                 <option value="beginner">초급</option>
                 <option value="intermediate">중급</option>
                 <option value="advanced">고급</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="studyTypeSelect">학습 종류</label>
+            <select id="studyTypeSelect">
+                <option value="word">단어</option>
+                <option value="phrase">표현</option>
+                <option value="sentence">문장</option>
+                <option value="listening">듣기</option>
             </select>
         </div>
 
@@ -397,8 +473,8 @@
     </div>
 
     <div class="action-buttons">
-        <button id="loadBtn" class="btn-load" onclick="loadWords()" disabled>학습 단어 생성 및 기록 저장 (API 키 필요)</button>
-        <button id="allRepeatBtn" class="btn-all-repeat" onclick="playAllWords()" disabled>전체 반복듣기 (10개 순차 재생)</button>
+        <button id="loadBtn" class="btn-load" onclick="loadWords()" disabled>학습 단어 생성</button>
+        <button id="allRepeatBtn" class="btn-all-repeat" onclick="playAllWords()" disabled>전체 반복듣기</button>
     </div>
 
     <div id="wordListContainer">
@@ -417,6 +493,20 @@
 <script>
     let userApiKey = "";
     let currentLoadedWords = [];
+
+    const studyTypeMap = {
+        word: { label: '단어', build: (items) => items },
+        phrase: { label: '표현', build: (items) => items.map((item, idx) => ({ ...item, word: `${item.word} / ${item.meaning}` })) },
+        sentence: {
+            label: '문장',
+            build: (items) => items.map((item, idx) => ({
+                ...item,
+                word: `${item.word}를(을) 활용한 문장 예시: "${item.word} is useful in this situation."`,
+                meaning: item.meaning
+            }))
+        },
+        listening: { label: '듣기', build: (items) => items }
+    };
 
     const wordDatabase = {
         travel: {
@@ -604,23 +694,27 @@
 
         const langSelect = document.getElementById('langSelect');
         const levelSelect = document.getElementById('levelSelect');
+        const studyTypeSelect = document.getElementById('studyTypeSelect');
         const situationSelect = document.getElementById('situationSelect');
 
         const selectedLang = langSelect.value;
         const selectedLevel = levelSelect.value;
+        const selectedStudyType = studyTypeSelect.value;
         const selectedSituation = situationSelect.value;
 
         const langText = langSelect.options[langSelect.selectedIndex].text;
         const levelText = levelSelect.options[levelSelect.selectedIndex].text;
+        const studyTypeText = studyTypeMap[selectedStudyType].label;
         const situationText = situationSelect.options[situationSelect.selectedIndex].text;
 
         const rawPool = wordDatabase[selectedSituation]?.[selectedLevel] || [];
-        const words = shuffleArray(rawPool).slice(0, 10);
+        const preparedPool = studyTypeMap[selectedStudyType].build(shuffleArray(rawPool));
+        const words = preparedPool.slice(0, 10);
         
-        renderWordsAndHistory(words, langText, levelText, situationText, selectedLang, selectedLevel, selectedSituation, true);
+        renderWordsAndHistory(words, langText, levelText, studyTypeText, situationText, selectedLang, selectedLevel, selectedStudyType, selectedSituation, true);
     }
 
-    function renderWordsAndHistory(words, langText, levelText, situationText, langVal, levelVal, sitVal, saveHistory) {
+    function renderWordsAndHistory(words, langText, levelText, studyTypeText, situationText, langVal, levelVal, studyTypeVal, sitVal, saveHistory) {
         currentLoadedWords = words;
         const container = document.getElementById('wordListContainer');
         container.innerHTML = '';
@@ -630,15 +724,15 @@
             card.className = 'word-card';
             card.innerHTML = `
                 <div class="word-header">
-                    <span class="word-title">${index + 1}. ${item.word} <small style="font-weight:normal; color:#555;">(${item.meaning})</small></span>
+                    <span class="word-title">${index + 1}. ${item.word} <small style="font-weight:normal; color:#586a7b;">(${item.meaning || '예문'})</small></span>
                     <div class="btn-group">
-                        <button onclick="speakText('${item.word}', '${langVal}')">듣기</button>
-                        <button onclick="repeatSpeak('${item.word}', '${langVal}')">반복</button>
+                        <button onclick="speakText('${item.word}', '${langVal}')">▶ 듣기</button>
+                        <button onclick="repeatSpeak('${item.word}', '${langVal}')">↻ 반복</button>
                     </div>
                 </div>
                 <div class="writing-area">
                     <label>따라 쓰기 연습:</label>
-                    <input type="text" class="writing-input" placeholder="여기에 단어 적기">
+                    <input type="text" class="writing-input" placeholder="여기에 적어보세요.">
                 </div>
             `;
             container.appendChild(card);
@@ -661,25 +755,25 @@
             itemDiv.id = rowId;
             const wordsJson = encodeURIComponent(JSON.stringify(words));
             
-            // 칸 구분 제거 및 날짜 시분초만 두껍게, 선택 내용은 작게 표시, 삭제 버튼만 유지
             itemDiv.innerHTML = `
-                <div class="history-content" onclick="studyAgain('${langVal}', '${levelVal}', '${sitVal}', '${langText}', '${levelText}', '${situationText}', '${wordsJson}')">
+                <div class="history-content" onclick="studyAgain('${langVal}', '${levelVal}', '${studyTypeVal}', '${sitVal}', '${langText}', '${levelText}', '${studyTypeText}', '${situationText}', '${wordsJson}')">
                     <span class="history-time">${timeString}</span>
-                    <div class="history-desc">[${langText}] ${levelText} / ${situationText}</div>
+                    <div class="history-desc">[${langText}] ${levelText} / ${studyTypeText} / ${situationText}</div>
                 </div>
-                <button class="btn-delete-icon" onclick="deleteHistoryRow('${rowId}')" title="삭제">🗑️</button>
+                <button class="btn-delete-icon" onclick="deleteHistoryRow('${rowId}')" title="삭제">⌫</button>
             `;
             historyListContainer.prepend(itemDiv);
         }
     }
 
-    function studyAgain(langVal, levelVal, sitVal, langText, levelText, situationText, wordsJson) {
+    function studyAgain(langVal, levelVal, studyTypeVal, sitVal, langText, levelText, studyTypeText, situationText, wordsJson) {
         document.getElementById('langSelect').value = langVal;
         document.getElementById('levelSelect').value = levelVal;
+        document.getElementById('studyTypeSelect').value = studyTypeVal;
         document.getElementById('situationSelect').value = sitVal;
 
         const words = JSON.parse(decodeURIComponent(wordsJson));
-        renderWordsAndHistory(words, langText, levelText, situationText, langVal, levelVal, sitVal, false);
+        renderWordsAndHistory(words, langText, levelText, studyTypeText, situationText, langVal, levelVal, studyTypeVal, sitVal, false);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
