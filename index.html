@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini 3.5 Flash-Lite 맞춤형 단어 암기 학습기</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --border-color: #d1d5db;
+            --error-color: #dc2626;
+            --success-color: #16a34a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+        }
+
+        .api-key-section {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .api-key-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .api-key-row input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-api {
+            background-color: #d97706;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .btn-api:hover { background-color: #b45309; }
+
+        .api-status {
+            margin-top: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--error-color);
+        }
+
+        .help-trigger-btn {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 13px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .help-trigger-btn:hover { background-color: #0369a1; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #4b5563;
+        }
+
+        .control-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        select, button {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .btn-load {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        .btn-load:hover { background-color: var(--primary-hover); }
+        .btn-load:disabled { background-color: #9ca3af; cursor: not-allowed; }
+
+        .btn-all-repeat {
+            background-color: #059669;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        .btn-all-repeat:hover { background-color: #047857; }
+        .btn-all-repeat:disabled { background-color: #9ca3af; cursor: not-allowed; }
+
+        .word-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .word-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .word-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .btn-group button {
+            margin-left: 5px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            background-color: #e5e7eb;
+            border: none;
+            border-radius: 4px;
+        }
+        .btn-group button:hover { background-color: #d1d5db; }
+
+        .writing-area {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .writing-area label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 3px;
+        }
+        .writing-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px dashed var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        #historySection {
+            margin-top: 40px;
+            border-top: 2px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: center;
+        }
+        th { background-color: #f3f4f6; }
+
+        .btn-action-table {
+            padding: 4px 8px;
+            font-size: 12px;
+            margin-right: 4px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+        }
+        .btn-study-again { background-color: #2563eb; color: white; }
+        .btn-study-again:hover { background-color: #1d4ed8; }
+        .btn-delete-row { background-color: #dc2626; color: white; }
+        .btn-delete-row:hover { background-color: #b91c1c; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Gemini 3.5 Flash-Lite 단어 암기 학습기</h1>
+
+    <div id="apiKeySection" class="api-key-section">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label for="apiKeyInput"><strong>Google Gemini API 키 입력 (gemini-3.5-flash-lite 연동)</strong></label>
+            <button class="help-trigger-btn" onclick="openHelpModal()">도움말 키 (발급 방법)</button>
+        </div>
+        <div class="api-key-row">
+            <input type="password" id="apiKeyInput" placeholder="AIzaSy... 형식의 API 키를 입력하세요">
+            <button class="btn-api" onclick="saveApiKey()">키 등록하기</button>
+        </div>
+        <div id="apiStatus" class="api-status">⚠️ API 키가 등록되지 않았습니다. 기능을 사용하려면 키를 입력해주세요.</div>
+    </div>
+
+    <div id="helpModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeHelpModal()">✕</button>
+            <h3 style="margin-top: 0; color: #0284c7;">💡 Gemini 3.5 Flash-Lite API 키 발급 방법</h3>
+            <ol style="padding-left: 20px; font-size: 14px;">
+                <li><strong>Google AI Studio 접속:</strong> 공식 웹사이트(<a href="https://aistudio.google.com/" target="_blank">aistudio.google.com</a>)에 구글 계정으로 로그인합니다.</li>
+                <li><strong>API 키 생성:</strong> 상단 또는 좌측 메뉴의 <strong>'Get API key'</strong> 버튼을 클릭합니다.</li>
+                <li><strong>키 복사:</strong> 생성된 API 키 문자열(<code>AIzaSy...</code>)을 클립보드에 복사합니다.</li>
+                <li><strong>등록 완료:</strong> 학습기 화면의 입력창에 키를 붙여넣고 <strong>[키 등록하기]</strong>를 누르면 즉시 잠금이 해제됩니다.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <div class="form-group">
+            <label for="langSelect">TTS 언어 선택</label>
+            <select id="langSelect">
+                <option value="en-US">영어 (English)</option>
+                <option value="ko-KR">한국어 (Korean)</option>
+                <option value="ja-JP">일본어 (Japanese)</option>
+                <option value="zh-CN">중국어 (Chinese)</option>
+                <option value="es-ES">스페인어 (Spanish)</option>
+                <option value="fr-FR">프랑스어 (French)</option>
+                <option value="de-DE">독일어 (German)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="levelSelect">난이도 선택</label>
+            <select id="levelSelect">
+                <option value="beginner">초급 (5자 이하)</option>
+                <option value="intermediate">중급 (10자 이하)</option>
+                <option value="advanced">고급 (10자 이상)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="situationSelect">상황 종류</label>
+            <select id="situationSelect">
+                <option value="travel">공항/여행</option>
+                <option value="business">비즈니스/회사</option>
+                <option value="daily">일상/식사</option>
+                <option value="emergency">비상/사건</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button id="loadBtn" class="btn-load" onclick="loadWords()" disabled>학습 단어 생성 및 기록 저장 (API 키 필요)</button>
+        <button id="allRepeatBtn" class="btn-all-repeat" onclick="playAllWords()" disabled>전체 반복듣기 (등록된 10개 단어 순차 재생)</button>
+    </div>
+
+    <div id="wordListContainer">
+        <p style="text-align: center; color: #6b7280;">API 키를 먼저 등록하면 상황별 새로운 단어 세트가 무작위로 생성됩니다.</p>
+    </div>
+
+    <div id="historySection">
+        <h3>생성 및 선택 내역 관리 (일자별 학습 재개 및 삭제)</h3>
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>생성 일시 (년/월/일 시:분:초)</th>
+                    <th>사용 모델</th>
+                    <th>언어</th>
+                    <th>난이도</th>
+                    <th>상황 종류</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody">
+                <tr><td colspan="6" style="color: #6b7280;">기록이 없습니다.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let userApiKey = "";
+    let currentLoadedWords = []; // 현재 화면에 표시 중인 단어 목록 보관
+
+    const wordDatabase = {
+        travel: {
+            beginner: [
+                {word: "Bus", meaning: "버스"}, {word: "Taxi", meaning: "택시"}, {word: "Map", meaning: "지도"}, 
+                {word: "Air", meaning: "항공"}, {word: "Fly", meaning: "날다"}, {word: "Bag", meaning: "가방"}, 
+                {word: "Gate", meaning: "탑승구"}, {word: "Pass", meaning: "패스"}, {word: "Trip", meaning: "여행"}, {word: "Hotel", meaning: "호텔"},
+                {word: "Car", meaning: "자동차"}, {word: "Ship", meaning: "배"}, {word: "Tour", meaning: "관광"}, {word: "View", meaning: "전망"}
+            ],
+            intermediate: [
+                {word: "Airport", meaning: "공항"}, {word: "Passport", meaning: "여권"}, {word: "Ticket", meaning: "티켓"}, 
+                {word: "Luggage", meaning: "수하물"}, {word: "Subway", meaning: "지하철"}, {word: "Station", meaning: "역"}, 
+                {word: "Journey", meaning: "여정"}, {word: "Tourist", meaning: "관광객"}, {word: "Booking", meaning: "예약"}, {word: "Customs", meaning: "세관"},
+                {word: "Platform", meaning: "승강장"}, {word: "Schedule", meaning: "시간표"}, {word: "Voucher", meaning: "할인권"}, {word: "Terminal", meaning: "터미널"}
+            ],
+            advanced: [
+                {word: "Destination", meaning: "목적지"}, {word: "Accommodation", meaning: "숙박시설"}, {word: "Transportation", meaning: "교통수단"}, 
+                {word: "Reservation", meaning: "정식예약"}, {word: "International", meaning: "국제적인"}, {word: "Sightseeing", meaning: "관광"}, 
+                {word: "Embarkation", meaning: "탑승승선"}, {word: "Neighborhood", meaning: "인근지역"}, {word: "Identification", meaning: "신분증"}, {word: "Representative", meaning: "대표자"},
+                {word: "Expedition", meaning: "탐험여행"}, {word: "Globalized", meaning: "세계화된"}, {word: "Infrastructure", meaning: "기반시설"}
+            ]
+        },
+        business: {
+            beginner: [
+                {word: "Job", meaning: "직업"}, {word: "Boss", meaning: "상사"}, {word: "Desk", meaning: "책상"}, 
+                {word: "Plan", meaning: "계획"}, {word: "Goal", meaning: "목표"}, {word: "Team", meaning: "팀"}, 
+                {word: "Work", meaning: "근무"}, {word: "Sale", meaning: "판매"}, {word: "Cost", meaning: "비용"}, {word: "Task", meaning: "과제"},
+                {word: "Pay", meaning: "급여"}, {word: "Hire", meaning: "고용하다"}, {word: "Lead", meaning: "이끌다"}, {word: "Deal", meaning: "거래"}
+            ],
+            intermediate: [
+                {word: "Meeting", meaning: "회의"}, {word: "Project", meaning: "프로젝트"}, {word: "Manager", meaning: "매니저"}, 
+                {word: "Schedule", meaning: "일정"}, {word: "Contract", meaning: "계약서"}, {word: "Report", meaning: "보고서"}, 
+                {word: "Client", meaning: "고객"}, {word: "Budget", meaning: "예산"}, {word: "Startup", meaning: "스타트업"}, {word: "Colleague", meaning: "동료"},
+                {word: "Strategy", meaning: "전략"}, {word: "Proposal", meaning: "제안서"}, {word: "Deadline", meaning: "마감기한"}, {word: "Feedback", meaning: "피드백"}
+            ],
+            advanced: [
+                {word: "Negotiation", meaning: "협상"}, {word: "Presentation", meaning: "발표"}, {word: "Collaboration", meaning: "협업"}, 
+                {word: "Headquarters", meaning: "본사"}, {word: "Advertisement", meaning: "광고"}, {word: "Establishment", meaning: "설립"}, 
+                {word: "Professional", meaning: "전문가"}, {word: "Administrator", meaning: "관리자"}, {word: "Responsibility", meaning: "책임감"}, {word: "Characteristic", meaning: "특성"},
+                {word: "Corporation", meaning: "기업/법인"}, {word: "Multinational", meaning: "다국적의"}, {word: "Benchmarking", meaning: "벤치마킹"}
+            ]
+        },
+        daily: {
+            beginner: [
+                {word: "Milk", meaning: "우유"}, {word: "Water", meaning: "물"}, {word: "Bread", meaning: "빵"}, 
+                {word: "Rice", meaning: "쌀/밥"}, {word: "Fruit", meaning: "과일"}, {word: "Soup", meaning: "국물"}, 
+                {word: "Fish", meaning: "생선"}, {word: "Meat", meaning: "고기"}, {word: "Egg", meaning: "계란"}, {word: "Salt", meaning: "소금"},
+                {word: "Fork", meaning: "포크"}, {word: "Spoon", meaning: "숟가락"}, {word: "Bowl", meaning: "그릇"}, {word: "Juice", meaning: "주스"}
+            ],
+            intermediate: [
+                {word: "Breakfast", meaning: "아침식사"}, {word: "Vegetable", meaning: "채소"}, {word: "Kitchen", meaning: "주방"}, 
+                {word: "Grocery", meaning: "식료품"}, {word: "Restaurant", meaning: "식당"}, {word: "Cooking", meaning: "요리"}, 
+                {word: "Delicious", meaning: "맛있는"}, {word: "Schedule", meaning: "일정"}, {word: "Exercise", meaning: "운동"}, {word: "Clothing", meaning: "의류"},
+                {word: "Apartment", meaning: "아파트"}, {word: "Furniture", meaning: "가구"}, {word: "Medicine", meaning: "약품"}
+            ],
+            advanced: [
+                {word: "Supermarket", meaning: "대형마트"}, {word: "Environment", meaning: "환경"}, {word: "Neighborhood", meaning: "동네"}, 
+                {word: "Conversation", meaning: "대화"}, {word: "Organization", meaning: "조직"}, {word: "Manufacturer", meaning: "제조사"}, 
+                {word: "Relationship", meaning: "관계"}, {word: "Entertainment", meaning: "오락"}, {word: "Appreciation", meaning: "감사"}, {word: "Understanding", meaning: "이해"},
+                {word: "Establishment", meaning: "시설/기관"}, {word: "Transformation", meaning: "변화/변형"}
+            ]
+        },
+        emergency: {
+            beginner: [
+                {word: "Help", meaning: "도와줘"}, {word: "Fire", meaning: "불화재"}, {word: "Pain", meaning: "통증"}, 
+                {word: "Hurt", meaning: "다침"}, {word: "Lost", meaning: "길잃음"}, {word: "Run", meaning: "도망치다"}, 
+                {word: "Safe", meaning: "안전함"}, {word: "Call", meaning: "전화"}, {word: "Stop", meaning: "멈춰"}, {word: "Bad", meaning: "나쁨"},
+                {word: "Sick", meaning: "아픈"}, {word: "Bleed", meaning: "출혈하다"}, {word: "Trap", meaning: "갇히다"}, {word: "Fear", meaning: "공포"}
+            ],
+            intermediate: [
+                {word: "Hospital", meaning: "병원"}, {word: "Accident", meaning: "사고"}, {word: "Police", meaning: "경찰"}, 
+                {word: "Danger", meaning: "위험"}, {word: "Medicine", meaning: "약"}, {word: "Warning", meaning: "경고"}, 
+                {word: "Ambulance", meaning: "구급차"}, {word: "Stolen", meaning: "도난"}, {word: "Urgent", meaning: "긴급"}, {word: "Shelter", meaning: "대피소"},
+                {word: "Disaster", meaning: "재난"}, {word: "Outbreak", meaning: "발병/발생"}, {word: "Security", meaning: "보안/경비"}, {word: "Casualty", meaning: "사상자"}
+            ],
+            advanced: [
+                {word: "Emergency", meaning: "비상사태"}, {word: "Concussion", meaning: "뇌진탕"}, {word: "Evacuation", meaning: "대피피난"}, 
+                {word: "Intervention", meaning: "조치개입"}, {word: "Unconscious", meaning: "의식불명"}, {word: "Catastrophe", meaning: "대참사"}, 
+                {word: "Investigation", meaning: "조사수사"}, {word: "Pharmaceutical", meaning: "제약의"}, {word: "Recommendation", meaning: "권고"}, {word: "Vulnerability", meaning: "취약성"},
+                {word: "Contamination", meaning: "오염"}, {word: "Unpredictable", meaning: "예측불가능한"}, {word: "Paramedic", meaning: "응급구조사"}
+            ]
+        }
+    };
+
+    window.onload = function() {
+        const savedKey = localStorage.getItem("gemini_flash_lite_key");
+        if (savedKey) {
+            userApiKey = savedKey;
+            applyRegisteredState();
+        }
+    };
+
+    function saveApiKey() {
+        const inputVal = document.getElementById('apiKeyInput').value.trim();
+        if (!inputVal) {
+            alert("유효한 API 키를 입력해주세요.");
+            return;
+        }
+        userApiKey = inputVal;
+        localStorage.setItem("gemini_flash_lite_key", userApiKey);
+        applyRegisteredState();
+        alert("Gemini 3.5 Flash-Lite API 키가 안전하게 등록되었습니다.");
+    }
+
+    function applyRegisteredState() {
+        const section = document.getElementById('apiKeySection');
+        if (section) section.style.display = 'none';
+        
+        document.getElementById('loadBtn').disabled = false;
+        document.getElementById('loadBtn').innerText = "학습 단어 생성 및 기록 저장";
+    }
+
+    function openHelpModal() {
+        document.getElementById('helpModal').style.display = 'flex';
+    }
+
+    function closeHelpModal() {
+        document.getElementById('helpModal').style.display = 'none';
+    }
+
+    function speakText(text, lang) {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function repeatSpeak(text, lang) {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const u1 = new SpeechSynthesisUtterance(text);
+        u1.lang = lang;
+        const u2 = new SpeechSynthesisUtterance(text);
+        u2.lang = lang;
+        u1.onend = () => setTimeout(() => window.speechSynthesis.speak(u2), 300);
+        window.speechSynthesis.speak(u1);
+    }
+
+    // 전체 반복듣기 (현재 화면에 등록된 10개 단어를 순차적으로 재생)
+    function playAllWords() {
+        if (!currentLoadedWords || currentLoadedWords.length === 0) return;
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+
+        const lang = document.getElementById('langSelect').value;
+        let index = 0;
+
+        function playNext() {
+            if (index >= currentLoadedWords.length) return;
+            const utterance = new SpeechSynthesisUtterance(currentLoadedWords[index].word);
+            utterance.lang = lang;
+            utterance.onend = () => {
+                index++;
+                setTimeout(playNext, 400); // 단어 간 간격 0.4초
+            };
+            window.speechSynthesis.speak(utterance);
+        }
+        playNext();
+    }
+
+    function formatDateTime(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        const h = String(date.getHours()).padStart(2, '0');
+        const min = String(date.getMinutes()).padStart(2, '0');
+        const s = String(date.getSeconds()).padStart(2, '0');
+        return `${y}년 ${m}월 ${d}일 ${h}:${min}:${s}`;
+    }
+
+    function shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function loadWords() {
+        if (!userApiKey) {
+            alert("API 키가 등록되어 있지 않습니다.");
+            return;
+        }
+
+        const langSelect = document.getElementById('langSelect');
+        const levelSelect = document.getElementById('levelSelect');
+        const situationSelect = document.getElementById('situationSelect');
+
+        const selectedLang = langSelect.value;
+        const selectedLevel = levelSelect.value;
+        const selectedSituation = situationSelect.value;
+
+        const langText = langSelect.options[langSelect.selectedIndex].text;
+        const levelText = levelSelect.options[levelSelect.selectedIndex].text;
+        const situationText = situationSelect.options[situationSelect.selectedIndex].text;
+
+        const rawPool = wordDatabase[selectedSituation]?.[selectedLevel] || [];
+        const words = shuffleArray(rawPool).slice(0, 10);
+        
+        renderWordsAndHistory(words, langText, levelText, situationText, selectedLang, selectedLevel, selectedSituation, true);
+    }
+
+    function renderWordsAndHistory(words, langText, levelText, situationText, langVal, levelVal, sitVal, saveHistory) {
+        currentLoadedWords = words;
+        const container = document.getElementById('wordListContainer');
+        container.innerHTML = '';
+
+        words.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'word-card';
+            card.innerHTML = `
+                <div class="word-header">
+                    <span class="word-title">${index + 1}. ${item.word} <small style="font-weight:normal; color:#555;">(${item.meaning})</small></span>
+                    <div class="btn-group">
+                        <button onclick="speakText('${item.word}', '${langVal}')">듣기</button>
+                        <button onclick="repeatSpeak('${item.word}', '${langVal}')">반복듣기</button>
+                    </div>
+                </div>
+                <div class="writing-area">
+                    <label>따라 쓰기 연습:</label>
+                    <input type="text" class="writing-input" placeholder="여기에 단어를 직접 적어보세요">
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        // 전체 반복듣기 버튼 활성화
+        document.getElementById('allRepeatBtn').disabled = false;
+
+        if (saveHistory) {
+            const now = new Date();
+            const timeString = formatDateTime(now);
+            const historyBody = document.getElementById('historyBody');
+            
+            if (historyBody.innerHTML.includes("기록이 없습니다.")) {
+                historyBody.innerHTML = "";
+            }
+
+            const rowId = 'row_' + Date.now();
+            const row = document.createElement('tr');
+            row.id = rowId;
+            // 데이터를 안전하게 전달하기 위해 JSON 문자열화하여 저장
+            const wordsJson = encodeURIComponent(JSON.stringify(words));
+            
+            row.innerHTML = `
+                <td>${timeString}</td>
+                <td><code>gemini-3.5-flash-lite</code></td>
+                <td>${langText}</td>
+                <td>${levelText}</td>
+                <td>${situationText}</td>
+                <td>
+                    <button class="btn-action-table btn-study-again" onclick="studyAgain('${langVal}', '${levelVal}', '${sitVal}', '${langText}', '${levelText}', '${situationText}', '${wordsJson}')">다시공부</button>
+                    <button class="btn-action-table btn-delete-row" onclick="deleteHistoryRow('${rowId}')">삭제</button>
+                </td>
+            `;
+            historyBody.prepend(row);
+        }
+    }
+
+    // 기록에서 기존 공부했던 단어 세트를 그대로 불러와 다시 공부하기
+    function studyAgain(langVal, levelVal, sitVal, langText, levelText, situationText, wordsJson) {
+        document.getElementById('langSelect').value = langVal;
+        document.getElementById('levelSelect').value = levelVal;
+        document.getElementById('situationSelect').value = sitVal;
+
+        const words = JSON.parse(decodeURIComponent(wordsJson));
+        renderWordsAndHistory(words, langText, levelText, situationText, langVal, levelVal, sitVal, false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 내역 행 삭제 기능
+    function deleteHistoryRow(rowId) {
+        const row = document.getElementById(rowId);
+        if (row) {
+            row.remove();
+        }
+        const historyBody = document.getElementById('historyBody');
+        if (historyBody.children.length === 0) {
+            historyBody.innerHTML = '<tr><td colspan="6" style="color: #6b7280;">기록이 없습니다.</td></tr>';
+        }
+    }
+</script>
+
+</body>
+</html>
