@@ -13,7 +13,6 @@
             --text-color: #1f2937;
             --border-color: #d1d5db;
             --error-color: #dc2626;
-            --success-color: #16a34a;
         }
 
         body {
@@ -22,6 +21,7 @@
             color: var(--text-color);
             margin: 0;
             padding: 10px;
+            box-sizing: border-box;
             -webkit-text-size-adjust: 100%;
         }
 
@@ -34,6 +34,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
+            overflow-x: hidden;
         }
 
         h1 {
@@ -41,6 +42,7 @@
             color: var(--primary-color);
             font-size: 20px;
             margin-bottom: 20px;
+            word-break: keep-all;
         }
 
         .api-key-section {
@@ -49,6 +51,7 @@
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
+            box-sizing: border-box;
         }
 
         .api-key-row {
@@ -141,6 +144,7 @@
             background: #f9fafb;
             border-radius: 8px;
             border: 1px solid var(--border-color);
+            box-sizing: border-box;
         }
 
         .form-group {
@@ -176,9 +180,9 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.2s;
             width: 100%;
             padding: 14px;
+            box-sizing: border-box;
         }
         .btn-load:hover { background-color: var(--primary-hover); }
         .btn-load:disabled { background-color: #9ca3af; cursor: not-allowed; }
@@ -188,9 +192,9 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.2s;
             width: 100%;
             padding: 14px;
+            box-sizing: border-box;
         }
         .btn-all-repeat:hover { background-color: #047857; }
         .btn-all-repeat:disabled { background-color: #9ca3af; cursor: not-allowed; }
@@ -202,6 +206,7 @@
             padding: 15px;
             margin-bottom: 12px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-sizing: border-box;
         }
 
         .word-header {
@@ -223,6 +228,7 @@
             font-size: 17px;
             font-weight: bold;
             color: var(--primary-color);
+            word-break: break-all;
         }
 
         .btn-group {
@@ -264,34 +270,64 @@
             margin-top: 30px;
             border-top: 2px solid var(--border-color);
             padding-top: 15px;
-            overflow-x: auto;
+            box-sizing: border-box;
         }
 
-        table {
-            width: 100%;
-            min-width: 550px;
-            border-collapse: collapse;
+        /* 표 영역 가로 스크롤 방지 및 카드형 모바일 리스트 스타일 적용 */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             margin-top: 10px;
-            font-size: 13px;
         }
 
-        th, td {
+        .history-item {
+            background: #f9fafb;
             border: 1px solid var(--border-color);
-            padding: 8px;
-            text-align: center;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            gap: 10px;
         }
-        th { background-color: #f3f4f6; }
 
-        .btn-action-table {
-            padding: 6px 10px;
-            font-size: 12px;
-            margin-right: 4px;
+        .history-content {
+            flex: 1;
             cursor: pointer;
-            border-radius: 4px;
-            border: none;
+            word-break: break-all;
         }
-        .btn-study-again { background-color: #2563eb; color: white; }
-        .btn-delete-row { background-color: #dc2626; color: white; }
+
+        .history-content:active {
+            opacity: 0.7;
+        }
+
+        .history-time {
+            font-weight: bold;
+            font-size: 13px;
+            color: var(--primary-color);
+            margin-bottom: 3px;
+            display: block;
+        }
+
+        .history-desc {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .btn-delete-icon {
+            background: none;
+            border: none;
+            color: var(--error-color);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px 8px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        .btn-delete-icon:hover { background-color: #fee2e2; }
     </style>
 </head>
 <body>
@@ -367,24 +403,10 @@
     </div>
 
     <div id="historySection">
-        <h3 style="font-size: 16px; margin-bottom: 5px;">학습 기록 관리</h3>
-        <p style="font-size: 11px; color: #6b7280; margin-top: 0;">좌우로 스크롤하여 전체 내용을 확인하세요.</p>
-        <div style="overflow-x: auto;">
-            <table id="historyTable">
-                <thead>
-                    <tr>
-                        <th>생성 일시</th>
-                        <th>모델</th>
-                        <th>언어</th>
-                        <th>난이도</th>
-                        <th>상황</th>
-                        <th>관리</th>
-                    </tr>
-                </thead>
-                <tbody id="historyBody">
-                    <tr><td colspan="6" style="color: #6b7280;">기록이 없습니다.</td></tr>
-                </tbody>
-            </table>
+        <h3 style="font-size: 16px; margin-bottom: 5px;">생성 내역 관리</h3>
+        <p style="font-size: 11px; color: #6b7280; margin-top: 0; margin-bottom: 10px;">내용을 터치하면 다시 공부할 수 있습니다.</p>
+        <div id="historyListContainer" class="history-list">
+            <div style="color: #6b7280; font-size: 13px; text-align: center; padding: 10px;">기록이 없습니다.</div>
         </div>
     </div>
 </div>
@@ -624,29 +646,27 @@
         if (saveHistory) {
             const now = new Date();
             const timeString = formatDateTime(now);
-            const historyBody = document.getElementById('historyBody');
+            const historyListContainer = document.getElementById('historyListContainer');
             
-            if (historyBody.innerHTML.includes("기록이 없습니다.")) {
-                historyBody.innerHTML = "";
+            if (historyListContainer.innerHTML.includes("기록이 없습니다.")) {
+                historyListContainer.innerHTML = "";
             }
 
             const rowId = 'row_' + Date.now();
-            const row = document.createElement('tr');
-            row.id = rowId;
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'history-item';
+            itemDiv.id = rowId;
             const wordsJson = encodeURIComponent(JSON.stringify(words));
             
-            row.innerHTML = `
-                <td>${timeString}</td>
-                <td><code>Flash-Lite</code></td>
-                <td>${langText}</td>
-                <td>${levelText}</td>
-                <td>${situationText}</td>
-                <td>
-                    <button class="btn-action-table btn-study-again" onclick="studyAgain('${langVal}', '${levelVal}', '${sitVal}', '${langText}', '${levelText}', '${situationText}', '${wordsJson}')">재개</button>
-                    <button class="btn-action-table btn-delete-row" onclick="deleteHistoryRow('${rowId}')">삭제</button>
-                </td>
+            // 칸 구분 없이 가로로 난이도, 상황 종류가 자연스럽게 이어지도록 구성
+            itemDiv.innerHTML = `
+                <div class="history-content" onclick="studyAgain('${langVal}', '${levelVal}', '${sitVal}', '${langText}', '${levelText}', '${situationText}', '${wordsJson}')">
+                    <span class="history-time">${timeString}</span>
+                    <div class="history-desc">[${langText}] ${levelText} / ${situationText}</div>
+                </div>
+                <button class="btn-delete-icon" onclick="deleteHistoryRow('${rowId}')" title="삭제">🗑️</button>
             `;
-            historyBody.prepend(row);
+            historyListContainer.prepend(itemDiv);
         }
     }
 
@@ -661,11 +681,11 @@
     }
 
     function deleteHistoryRow(rowId) {
-        const row = document.getElementById(rowId);
-        if (row) row.remove();
-        const historyBody = document.getElementById('historyBody');
-        if (historyBody.children.length === 0) {
-            historyBody.innerHTML = '<tr><td colspan="6" style="color: #6b7280;">기록이 없습니다.</td></tr>';
+        const item = document.getElementById(rowId);
+        if (item) item.remove();
+        const historyListContainer = document.getElementById('historyListContainer');
+        if (historyListContainer.children.length === 0) {
+            historyListContainer.innerHTML = '<div style="color: #6b7280; font-size: 13px; text-align: center; padding: 10px;">기록이 없습니다.</div>';
         }
     }
 </script>
