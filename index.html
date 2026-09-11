@@ -444,7 +444,6 @@
                 <li><strong>Google AI Studio 접속:</strong> (<a href="https://aistudio.google.com/" target="_blank">aistudio.google.com</a>) 로그인</li>
                 <li><strong>API 키 생성:</strong> 상단/좌측 <strong>'Get API key'</strong> 클릭</li>
                 <li><strong>복사 후 등록:</strong> 생성된 키(<code>AIzaSy...</code>)를 복사해 입력창에 붙여넣기</li>
-                <li><strong>모델:</strong> Gemini 2.0 Flash Lite 사용 (무료 프로계획)</li>
             </ol>
         </div>
     </div>
@@ -533,8 +532,7 @@
         }
     };
 
-    // Gemini 2.0 Flash Lite API 엔드포인트
-    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent';
+    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent';
 
     window.onload = function() {
         const savedKey = localStorage.getItem("gemini_flash_lite_key");
@@ -626,10 +624,10 @@
         const situationText = document.getElementById('situationSelect').options[document.getElementById('situationSelect').selectedIndex].text;
         
         const prompt = `Generate 10 ${studyType}s for learning ${language} at ${level} level in the context of "${situation}". 
-Format the response as a JSON array with objects containing "word" and "meaning" fields.
-The "meaning" should be in Korean.
-Return ONLY the JSON array, no other text.
-Example format: [{"word": "hello", "meaning": "안녕하세요"}, ...]`;
+        Format the response as a JSON array with objects containing "word" and "meaning" fields.
+        The "meaning" should be in Korean.
+        Return ONLY the JSON array, no other text.
+        Example format: [{"word": "hello", "meaning": "안녕하세요"}, ...]`;
 
         try {
             const response = await fetch(`${GEMINI_API_URL}?key=${userApiKey}`, {
@@ -641,17 +639,10 @@ Example format: [{"word": "hello", "meaning": "안녕하세요"}, ...]`;
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                console.error('API Response Error:', errorData);
-                throw new Error(`API Error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+                throw new Error(`API Error: ${response.status}`);
             }
 
             const data = await response.json();
-            
-            if (!data.candidates || !data.candidates[0]?.content?.parts?.[0]?.text) {
-                throw new Error('Invalid API response structure');
-            }
-
             let jsonStr = data.candidates[0].content.parts[0].text.trim();
             
             // JSON 추출 (마크다운 코드블록 제거)
@@ -700,7 +691,7 @@ Example format: [{"word": "hello", "meaning": "안녕하세요"}, ...]`;
             const preparedPool = STUDY_TYPE_MAP[selectedStudyType].build(rawWords);
             renderWordsAndHistory(preparedPool, langText, levelText, studyTypeText, situationText, selectedLang, selectedLevel, selectedStudyType, selectedSituation, true);
         } catch (error) {
-            alert("단어 생성 중 오류가 발생했습니다:\n" + error.message);
+            alert("단어 생성 중 오류가 발생했습니다: " + error.message);
             console.error('Error:', error);
         } finally {
             loadBtn.disabled = false;
