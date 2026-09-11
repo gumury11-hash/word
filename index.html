@@ -777,10 +777,14 @@
 
     // Gemini / Generative Language API helper - tries Gemini 3.5 (Flash Lite) endpoints first,
     // falls back to other Generative Language endpoints. Returns array of {word, meaning}.
-    async function generateWordsWithGemini({langText, levelText, studyTypeText, situationText, selectedLang, selectedLevel, selectedStudyType, selectedSituation}) {
+    async function generateWordsWithGemini({langText, levelText, studyTypeText, situationText, selectedLang, selectedLevel, selectedStudyType, selectedSituation, count = 10, excludedWords = []}) {
         if (!userApiKey) throw new Error('API key missing');
 
-        const prompt = `Generate 10 ${studyTypeText} for the situation '${situationText}' at ${levelText} level in ${langText}. ` +
+        const excludedText = excludedWords.length
+            ? ` Do not use any of these already selected items: ${excludedWords.join(', ')}.`
+            : '';
+        const prompt = `Generate ${count} unique ${studyTypeText} for the situation '${situationText}' at ${levelText} level in ${langText}. ` +
+            `Every item must differ from the others.${excludedText} ` +
             `Return ONLY a JSON array of objects with keys \"word\" and \"meaning\" (meaning in Korean). No extra text or Markdown.`;
 
         // Try endpoints — prefer the gemini-3.6-flash generateContent endpoint (matches ai-study.html)
@@ -851,7 +855,7 @@
                 }
 
                 const items = parsed.map(it => ({ word: String(it.word || it.text || it.title || '').trim(), meaning: String(it.meaning || it.translation || it.korean || it.kor || it.explanation || '').trim() })).filter(i => i.word);
-                return items.slice(0, 10);
+                return items.slice(0, count);
             } catch (err) {
                 lastErr = err;
                 console.warn('generateWordsWithGemini request error:', err);
@@ -900,16 +904,36 @@
             document.getElementById('loadBtn').disabled = true;
             document.getElementById('loadBtn').innerText = '생성 중...';
 
-            const generated = await generateWordsWithGemini({langText, levelText, studyTypeText, situationText, selectedLang, selectedLevel, selectedStudyType, selectedSituation});
-
             const studiedSet = getStudiedWordsSet();
-            const filtered = generated.filter(it => {
-                const w = String(it.word || '').trim().toLowerCase();
-                return w && !studiedSet.has(w);
-            });
+            const collected = [];
+            const usedWords = new Set(studiedSet);
+            const maxAttempts = 5;
+            let attempts = 0;
 
-            const preparedPool = studyTypeMap[selectedStudyType].build(filtered);
-            const words = preparedPool.slice(0, 10);
+            // Request at most five times. If fewer than ten unique items are found,
+            // render every unique item collected so far.
+            while (collected.length < 10 && attempts < maxAttempts) {
+                attempts++;
+                const remaining = 10 - collected.length;
+                document.getElementById('loadBtn').innerText = `생성 중... ${attempts}/${maxAttempts}회 (${collected.length}/10)`;
+
+                const generated = await generateWordsWithGemini({
+                    langText, levelText, studyTypeText, situationText,
+                    selectedLang, selectedLevel, selectedStudyType, selectedSituation,
+                    count: remaining,
+                    excludedWords: Array.from(usedWords).slice(-100)
+                });
+
+                generated.forEach(item => {
+                    const key = String(item.word || '').trim().replace(/\s+/g, ' ').toLowerCase();
+                    if (key && !usedWords.has(key) && collected.length < 10) {
+                        usedWords.add(key);
+                        collected.push(item);
+                    }
+                });
+            }
+
+            const words = studyTypeMap[selectedStudyType].build(collected);
             renderWordsAndHistory(words, langText, levelText, studyTypeText, situationText, selectedLang, selectedLevel, selectedStudyType, selectedSituation, true);
         } catch (err) {
             console.error('Gemini generation failed:', err);
