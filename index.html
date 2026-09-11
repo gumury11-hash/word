@@ -8,28 +8,15 @@
         :root {
             --bg-1: #fff9f3;
             --bg-2: #f6dcc2;
-            --metal-1: #fffdfb;
-            --metal-2: #f9eee3;
-            --metal-3: #f0d1ae;
-            --metal-4: #e7b884;
-            --metal-5: #b7773d;
-            --steel-1: #d88f4b;
-            --steel-2: #b96f2a;
             --steel-3: #7d4314;
-            --ice-1: #fff1df;
-            --ice-2: #f7d9b5;
             --panel-edge: rgba(219, 154, 95, 0.7);
             --panel-shadow: rgba(108, 66, 27, 0.12);
             --text-color: #3d2a1d;
             --muted: #7d5943;
-            --soft: #a47a5a;
             --primary-color: #d98a41;
             --primary-hover: #b9691d;
-            --success-color: #d88d4a;
-            --warning-color: #e9b87d;
             --error-color: #b14d2d;
             --button-text: #fffaf6;
-            --glow: rgba(255, 184, 111, 0.24);
         }
 
         * {
@@ -137,6 +124,7 @@
             width: 100%;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 10px 18px rgba(130, 89, 45, 0.12);
         }
+
         .btn-api:hover,
         .help-trigger-btn:hover,
         .btn-load:hover,
@@ -257,7 +245,13 @@
             border: 1px solid rgba(176, 108, 42, 0.9);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 12px 20px rgba(132, 84, 34, 0.14);
         }
-        .btn-load:disabled { background: linear-gradient(180deg, #f3e1cf, #e7c19a); color: #8d6743; cursor: not-allowed; box-shadow: none; }
+
+        .btn-load:disabled {
+            background: linear-gradient(180deg, #f3e1cf, #e7c19a);
+            color: #8d6743;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
 
         .btn-all-repeat {
             background: linear-gradient(180deg, #efb877, #d7853c);
@@ -270,7 +264,13 @@
             border: 1px solid rgba(185, 113, 45, 0.9);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 12px 20px rgba(189, 127, 70, 0.14);
         }
-        .btn-all-repeat:disabled { background: linear-gradient(180deg, #f3e1cf, #e7c19a); color: #8d6743; cursor: not-allowed; box-shadow: none; }
+
+        .btn-all-repeat:disabled {
+            background: linear-gradient(180deg, #f3e1cf, #e7c19a);
+            color: #8d6743;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
 
         .word-card {
             border-radius: 18px;
@@ -325,12 +325,14 @@
             display: flex;
             flex-direction: column;
         }
+
         .writing-area label {
             font-size: 12px;
             color: var(--muted);
             margin-bottom: 5px;
             font-weight: 700;
         }
+
         .writing-input {
             padding: 12px 14px;
             border: 1px dashed rgba(148, 163, 184, 0.9);
@@ -517,7 +519,7 @@
     let userApiKey = "";
     let currentLoadedWords = [];
 
-    const studyTypeMap = {
+    const STUDY_TYPE_MAP = {
         word: { label: '단어', build: (items) => items },
         phrase: { label: '표현', build: (items) => items.map((item) => ({ ...item, word: `${item.word} / ${item.meaning}` })) },
         sentence: {
@@ -529,6 +531,8 @@
             }))
         }
     };
+
+    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
     window.onload = function() {
         const savedKey = localStorage.getItem("gemini_flash_lite_key");
@@ -553,7 +557,6 @@
     function applyRegisteredState() {
         const section = document.getElementById('apiKeySection');
         if (section) section.style.display = 'none';
-        
         document.getElementById('loadBtn').disabled = false;
         document.getElementById('loadBtn').innerText = "학습 단어 생성 및 기록 저장";
     }
@@ -616,15 +619,6 @@
         return `${y}/${m}/${d} ${h}:${min}:${s}`;
     }
 
-    function shuffleArray(array) {
-        const arr = [...array];
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
-
     async function generateWordsWithGemini(language, level, studyType, situation) {
         const langText = document.getElementById('langSelect').options[document.getElementById('langSelect').selectedIndex].text;
         const situationText = document.getElementById('situationSelect').options[document.getElementById('situationSelect').selectedIndex].text;
@@ -636,17 +630,11 @@
         Example format: [{"word": "hello", "meaning": "안녕하세요"}, ...]`;
 
         try {
-            const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + userApiKey, {
+            const response = await fetch(`${GEMINI_API_URL}?key=${userApiKey}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: prompt
-                        }]
-                    }]
+                    contents: [{ parts: [{ text: prompt }] }]
                 })
             });
 
@@ -655,10 +643,9 @@
             }
 
             const data = await response.json();
-            const content = data.candidates[0].content.parts[0].text;
+            let jsonStr = data.candidates[0].content.parts[0].text.trim();
             
             // JSON 추출 (마크다운 코드블록 제거)
-            let jsonStr = content.trim();
             if (jsonStr.startsWith('```json')) {
                 jsonStr = jsonStr.replace(/^```json\s*/, '').replace(/\s*```$/, '');
             } else if (jsonStr.startsWith('```')) {
@@ -692,21 +679,17 @@
 
         const langText = langSelect.options[langSelect.selectedIndex].text;
         const levelText = levelSelect.options[levelSelect.selectedIndex].text;
-        const studyTypeText = studyTypeMap[selectedStudyType].label;
+        const studyTypeText = STUDY_TYPE_MAP[selectedStudyType].label;
         const situationText = situationSelect.options[situationSelect.selectedIndex].text;
 
-        // 로딩 상태 표시
         loadBtn.disabled = true;
         const originalText = loadBtn.innerText;
         loadBtn.innerHTML = '<span class="loading-spinner"></span> 생성 중...';
 
         try {
-            // Gemini API를 사용하여 단어 생성
             const rawWords = await generateWordsWithGemini(selectedLang, selectedLevel, selectedStudyType, selectedSituation);
-            const preparedPool = studyTypeMap[selectedStudyType].build(rawWords);
-            const words = preparedPool.slice(0, 10);
-            
-            renderWordsAndHistory(words, langText, levelText, studyTypeText, situationText, selectedLang, selectedLevel, selectedStudyType, selectedSituation, true);
+            const preparedPool = STUDY_TYPE_MAP[selectedStudyType].build(rawWords);
+            renderWordsAndHistory(preparedPool, langText, levelText, studyTypeText, situationText, selectedLang, selectedLevel, selectedStudyType, selectedSituation, true);
         } catch (error) {
             alert("단어 생성 중 오류가 발생했습니다: " + error.message);
             console.error('Error:', error);
