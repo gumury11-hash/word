@@ -401,6 +401,20 @@
             font-weight: 800;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
         }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(217, 138, 65, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -516,140 +530,6 @@
         }
     };
 
-    const wordDatabase = {
-        travel: {
-            beginner: [
-                {word: "Bus", meaning: "버스"}, {word: "Taxi", meaning: "택시"}, {word: "Map", meaning: "지도"},
-                {word: "Air", meaning: "항공"}, {word: "Fly", meaning: "날다"}, {word: "Bag", meaning: "가방"},
-                {word: "Gate", meaning: "탑승구"}, {word: "Pass", meaning: "패스"}, {word: "Trip", meaning: "여행"}, {word: "Hotel", meaning: "호텔"},
-                {word: "Car", meaning: "자동차"}, {word: "Ship", meaning: "배"}, {word: "Tour", meaning: "관광"}, {word: "View", meaning: "전망"}
-            ],
-            intermediate: [
-                {word: "Airport", meaning: "공항"}, {word: "Passport", meaning: "여권"}, {word: "Ticket", meaning: "티켓"},
-                {word: "Luggage", meaning: "수하물"}, {word: "Subway", meaning: "지하철"}, {word: "Station", meaning: "역"},
-                {word: "Journey", meaning: "여정"}, {word: "Tourist", meaning: "관광객"}, {word: "Booking", meaning: "예약"}, {word: "Customs", meaning: "세관"},
-                {word: "Platform", meaning: "승강장"}, {word: "Schedule", meaning: "시간표"}, {word: "Voucher", meaning: "할인권"}, {word: "Terminal", meaning: "터미널"}
-            ],
-            advanced: [
-                {word: "Destination", meaning: "목적지"}, {word: "Accommodation", meaning: "숙박시설"}, {word: "Transportation", meaning: "교통수단"},
-                {word: "Reservation", meaning: "정식예약"}, {word: "International", meaning: "국제적인"}, {word: "Sightseeing", meaning: "관광"},
-                {word: "Embarkation", meaning: "탑승승선"}, {word: "Neighborhood", meaning: "인근지역"}, {word: "Identification", meaning: "신분증"}, {word: "Representative", meaning: "대표자"},
-                {word: "Expedition", meaning: "탐험여행"}, {word: "Globalized", meaning: "세계화된"}, {word: "Infrastructure", meaning: "기반시설"}
-            ]
-        },
-        business: {
-            beginner: [
-                {word: "Job", meaning: "직업"}, {word: "Boss", meaning: "상사"}, {word: "Desk", meaning: "책상"},
-                {word: "Plan", meaning: "계획"}, {word: "Goal", meaning: "목표"}, {word: "Team", meaning: "팀"},
-                {word: "Work", meaning: "근무"}, {word: "Sale", meaning: "판매"}, {word: "Cost", meaning: "비용"}, {word: "Task", meaning: "과제"},
-                {word: "Pay", meaning: "급여"}, {word: "Hire", meaning: "고용하다"}, {word: "Lead", meaning: "이끌다"}, {word: "Deal", meaning: "거래"}
-            ],
-            intermediate: [
-                {word: "Meeting", meaning: "회의"}, {word: "Project", meaning: "프로젝트"}, {word: "Manager", meaning: "매니저"},
-                {word: "Schedule", meaning: "일정"}, {word: "Contract", meaning: "계약서"}, {word: "Report", meaning: "보고서"},
-                {word: "Client", meaning: "고객"}, {word: "Budget", meaning: "예산"}, {word: "Startup", meaning: "스타트업"}, {word: "Colleague", meaning: "동료"},
-                {word: "Strategy", meaning: "전략"}, {word: "Proposal", meaning: "제안서"}, {word: "Deadline", meaning: "마감기한"}, {word: "Feedback", meaning: "피드백"}
-            ],
-            advanced: [
-                {word: "Negotiation", meaning: "협상"}, {word: "Presentation", meaning: "발표"}, {word: "Collaboration", meaning: "협업"},
-                {word: "Headquarters", meaning: "본사"}, {word: "Advertisement", meaning: "광고"}, {word: "Establishment", meaning: "설립"},
-                {word: "Professional", meaning: "전문가"}, {word: "Administrator", meaning: "관리자"}, {word: "Responsibility", meaning: "책임감"}, {word: "Characteristic", meaning: "특성"},
-                {word: "Corporation", meaning: "기업/법인"}, {word: "Multinational", meaning: "다국적의"}, {word: "Benchmarking", meaning: "벤치마킹"}
-            ]
-        },
-        daily: {
-            beginner: [
-                {word: "Milk", meaning: "우유"}, {word: "Water", meaning: "물"}, {word: "Bread", meaning: "빵"},
-                {word: "Rice", meaning: "쌀/밥"}, {word: "Fruit", meaning: "과일"}, {word: "Soup", meaning: "국물"},
-                {word: "Fish", meaning: "생선"}, {word: "Meat", meaning: "고기"}, {word: "Egg", meaning: "계란"}, {word: "Salt", meaning: "소금"},
-                {word: "Fork", meaning: "포크"}, {word: "Spoon", meaning: "숟가락"}, {word: "Bowl", meaning: "그릇"}, {word: "Juice", meaning: "주스"}
-            ],
-            intermediate: [
-                {word: "Breakfast", meaning: "아침식사"}, {word: "Vegetable", meaning: "채소"}, {word: "Kitchen", meaning: "주방"},
-                {word: "Grocery", meaning: "식료품"}, {word: "Restaurant", meaning: "식당"}, {word: "Cooking", meaning: "요리"},
-                {word: "Delicious", meaning: "맛있는"}, {word: "Schedule", meaning: "일정"}, {word: "Exercise", meaning: "운동"}, {word: "Clothing", meaning: "의류"},
-                {word: "Apartment", meaning: "아파트"}, {word: "Furniture", meaning: "가구"}, {word: "Medicine", meaning: "약품"}
-            ],
-            advanced: [
-                {word: "Supermarket", meaning: "대형마트"}, {word: "Environment", meaning: "환경"}, {word: "Neighborhood", meaning: "동네"},
-                {word: "Conversation", meaning: "대화"}, {word: "Organization", meaning: "조직"}, {word: "Manufacturer", meaning: "제조사"},
-                {word: "Relationship", meaning: "관계"}, {word: "Entertainment", meaning: "오락"}, {word: "Appreciation", meaning: "감사"}, {word: "Understanding", meaning: "이해"},
-                {word: "Establishment", meaning: "시설/기관"}, {word: "Transformation", meaning: "변화/변형"}
-            ]
-        },
-        emergency: {
-            beginner: [
-                {word: "Help", meaning: "도와줘"}, {word: "Fire", meaning: "불화재"}, {word: "Pain", meaning: "통증"},
-                {word: "Hurt", meaning: "다침"}, {word: "Lost", meaning: "길잃음"}, {word: "Run", meaning: "도망치다"},
-                {word: "Safe", meaning: "안전함"}, {word: "Call", meaning: "전화"}, {word: "Stop", meaning: "멈춰"}, {word: "Bad", meaning: "나쁨"},
-                {word: "Sick", meaning: "아픈"}, {word: "Bleed", meaning: "출혈하다"}, {word: "Trap", meaning: "갇히다"}, {word: "Fear", meaning: "공포"}
-            ],
-            intermediate: [
-                {word: "Hospital", meaning: "병원"}, {word: "Accident", meaning: "사고"}, {word: "Police", meaning: "경찰"},
-                {word: "Danger", meaning: "위험"}, {word: "Medicine", meaning: "약"}, {word: "Warning", meaning: "경고"},
-                {word: "Ambulance", meaning: "구급차"}, {word: "Stolen", meaning: "도난"}, {word: "Urgent", meaning: "긴급"}, {word: "Shelter", meaning: "대피소"},
-                {word: "Disaster", meaning: "재난"}, {word: "Outbreak", meaning: "발병/발생"}, {word: "Security", meaning: "보안/경비"}, {word: "Casualty", meaning: "사상자"}
-            ],
-            advanced: [
-                {word: "Emergency", meaning: "비상사태"}, {word: "Concussion", meaning: "뇌진탕"}, {word: "Evacuation", meaning: "대피피난"},
-                {word: "Intervention", meaning: "조치개입"}, {word: "Unconscious", meaning: "의식불명"}, {word: "Catastrophe", meaning: "대참사"},
-                {word: "Investigation", meaning: "조사수사"}, {word: "Pharmaceutical", meaning: "제약의"}, {word: "Recommendation", meaning: "권고"}, {word: "Vulnerability", meaning: "취약성"},
-                {word: "Contamination", meaning: "오염"}, {word: "Unpredictable", meaning: "예측불가능한"}, {word: "Paramedic", meaning: "응급구조사"}
-            ]
-        },
-        shopping: {
-            beginner: [
-                {word: "Price", meaning: "가격"}, {word: "Shop", meaning: "가게"}, {word: "Cart", meaning: "카트"},
-                {word: "Sale", meaning: "세일"}, {word: "Bag", meaning: "가방"}, {word: "Change", meaning: "거스름돈"},
-                {word: "Cash", meaning: "현금"}, {word: "Pay", meaning: "지불하다"}, {word: "Size", meaning: "사이즈"}, {word: "Receipt", meaning: "영수증"}
-            ],
-            intermediate: [
-                {word: "Discount", meaning: "할인"}, {word: "Product", meaning: "제품"}, {word: "Brand", meaning: "브랜드"},
-                {word: "Coupon", meaning: "쿠폰"}, {word: "Checkout", meaning: "계산대"}, {word: "Exchange", meaning: "교환"},
-                {word: "Quality", meaning: "품질"}, {word: "Delivery", meaning: "배달"}, {word: "Customer", meaning: "고객"}, {word: "Refund", meaning: "환불"}
-            ],
-            advanced: [
-                {word: "Merchandise", meaning: "상품"}, {word: "Promotion", meaning: "프로모션"}, {word: "Inventory", meaning: "재고"},
-                {word: "Warranty", meaning: "보증"}, {word: "Packaging", meaning: "포장"}, {word: "Authentication", meaning: "인증"},
-                {word: "Subscription", meaning: "구독"}, {word: "Recommendation", meaning: "추천"}, {word: "Affordability", meaning: "가성비"}, {word: "Competitor", meaning: "경쟁사"}
-            ]
-        },
-        school: {
-            beginner: [
-                {word: "Book", meaning: "책"}, {word: "Class", meaning: "수업"}, {word: "Teacher", meaning: "선생님"},
-                {word: "Student", meaning: "학생"}, {word: "Desk", meaning: "책상"}, {word: "Paper", meaning: "종이"},
-                {word: "Pen", meaning: "펜"}, {word: "Lesson", meaning: "수업"}, {word: "Test", meaning: "시험"}, {word: "Homework", meaning: "숙제"}
-            ],
-            intermediate: [
-                {word: "Campus", meaning: "캠퍼스"}, {word: "Lecture", meaning: "강의"}, {word: "Assignment", meaning: "과제"},
-                {word: "Dictionary", meaning: "사전"}, {word: "Presentation", meaning: "발표"}, {word: "Group", meaning: "그룹"},
-                {word: "Semester", meaning: "학기"}, {word: "Library", meaning: "도서관"}, {word: "Schedule", meaning: "시간표"}, {word: "Essay", meaning: "에세이"}
-            ],
-            advanced: [
-                {word: "Curriculum", meaning: "교육과정"}, {word: "Research", meaning: "연구"}, {word: "Seminar", meaning: "세미나"},
-                {word: "Dissertation", meaning: "논문"}, {word: "Academic", meaning: "학문적인"}, {word: "Evaluation", meaning: "평가"},
-                {word: "Scholarship", meaning: "장학금"}, {word: "Internship", meaning: "인턴십"}, {word: "Admission", meaning: "입학"}, {word: "Graduation", meaning: "졸업"}
-            ]
-        },
-        health: {
-            beginner: [
-                {word: "Doctor", meaning: "의사"}, {word: "Nurse", meaning: "간호사"}, {word: "Pain", meaning: "통증"},
-                {word: "Sleep", meaning: "잠"}, {word: "Water", meaning: "물"}, {word: "Medicine", meaning: "약"},
-                {word: "Healthy", meaning: "건강한"}, {word: "Cough", meaning: "기침"}, {word: "Fever", meaning: "열"}, {word: "Exercise", meaning: "운동"}
-            ],
-            intermediate: [
-                {word: "Hospital", meaning: "병원"}, {word: "Checkup", meaning: "검진"}, {word: "Symptoms", meaning: "증상"},
-                {word: "Diet", meaning: "식단"}, {word: "Stress", meaning: "스트레스"}, {word: "Recovery", meaning: "회복"},
-                {word: "Vaccination", meaning: "백신 접종"}, {word: "Treatment", meaning: "치료"}, {word: "Injury", meaning: "부상"}, {word: "Nutrition", meaning: "영양"}
-            ],
-            advanced: [
-                {word: "Diagnosis", meaning: "진단"}, {word: "Prevention", meaning: "예방"}, {word: "Therapy", meaning: "치료법"},
-                {word: "Rehabilitation", meaning: "재활"}, {word: "Prescription", meaning: "처방전"}, {word: "Immunity", meaning: "면역"},
-                {word: "Inflammation", meaning: "염증"}, {word: "Cardiology", meaning: "심장학"}, {word: "Neurology", meaning: "신경학"}, {word: "Wellbeing", meaning: "웰빙"}
-            ]
-        }
-    };
-
     window.onload = function() {
         const savedKey = localStorage.getItem("gemini_flash_lite_key");
         if (savedKey) {
@@ -745,7 +625,55 @@
         return arr;
     }
 
-    function loadWords() {
+    async function generateWordsWithGemini(language, level, studyType, situation) {
+        const langText = document.getElementById('langSelect').options[document.getElementById('langSelect').selectedIndex].text;
+        const situationText = document.getElementById('situationSelect').options[document.getElementById('situationSelect').selectedIndex].text;
+        
+        const prompt = `Generate 10 ${studyType}s for learning ${language} at ${level} level in the context of "${situation}". 
+        Format the response as a JSON array with objects containing "word" and "meaning" fields.
+        The "meaning" should be in Korean.
+        Return ONLY the JSON array, no other text.
+        Example format: [{"word": "hello", "meaning": "안녕하세요"}, ...]`;
+
+        try {
+            const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + userApiKey, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }]
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const content = data.candidates[0].content.parts[0].text;
+            
+            // JSON 추출 (마크다운 코드블록 제거)
+            let jsonStr = content.trim();
+            if (jsonStr.startsWith('```json')) {
+                jsonStr = jsonStr.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+            } else if (jsonStr.startsWith('```')) {
+                jsonStr = jsonStr.replace(/^```\s*/, '').replace(/\s*```$/, '');
+            }
+            
+            const words = JSON.parse(jsonStr);
+            return words.slice(0, 10);
+        } catch (error) {
+            console.error('Error generating words:', error);
+            throw error;
+        }
+    }
+
+    async function loadWords() {
         if (!userApiKey) {
             alert("API 키가 등록되어 있지 않습니다.");
             return;
@@ -755,6 +683,7 @@
         const levelSelect = document.getElementById('levelSelect');
         const studyTypeSelect = document.getElementById('studyTypeSelect');
         const situationSelect = document.getElementById('situationSelect');
+        const loadBtn = document.getElementById('loadBtn');
 
         const selectedLang = langSelect.value;
         const selectedLevel = levelSelect.value;
@@ -766,11 +695,25 @@
         const studyTypeText = studyTypeMap[selectedStudyType].label;
         const situationText = situationSelect.options[situationSelect.selectedIndex].text;
 
-        const rawPool = wordDatabase[selectedSituation]?.[selectedLevel] || [];
-        const preparedPool = studyTypeMap[selectedStudyType].build(shuffleArray(rawPool));
-        const words = preparedPool.slice(0, 10);
-        
-        renderWordsAndHistory(words, langText, levelText, studyTypeText, situationText, selectedLang, selectedLevel, selectedStudyType, selectedSituation, true);
+        // 로딩 상태 표시
+        loadBtn.disabled = true;
+        const originalText = loadBtn.innerText;
+        loadBtn.innerHTML = '<span class="loading-spinner"></span> 생성 중...';
+
+        try {
+            // Gemini API를 사용하여 단어 생성
+            const rawWords = await generateWordsWithGemini(selectedLang, selectedLevel, selectedStudyType, selectedSituation);
+            const preparedPool = studyTypeMap[selectedStudyType].build(rawWords);
+            const words = preparedPool.slice(0, 10);
+            
+            renderWordsAndHistory(words, langText, levelText, studyTypeText, situationText, selectedLang, selectedLevel, selectedStudyType, selectedSituation, true);
+        } catch (error) {
+            alert("단어 생성 중 오류가 발생했습니다: " + error.message);
+            console.error('Error:', error);
+        } finally {
+            loadBtn.disabled = false;
+            loadBtn.innerText = originalText;
+        }
     }
 
     function normalizeCheckText(value) {
@@ -816,8 +759,8 @@
                 <div class="word-header">
                     <span class="word-title">${index + 1}. ${item.word} <small style="font-weight:normal; color:#586a7b; font-size: 16px;">(${item.meaning || '예문'})</small></span>
                     <div class="btn-group">
-                        <button onclick="speakText('${item.word}', '${langVal}')">▶ 듣기</button>
-                        <button onclick="repeatSpeak('${item.word}', '${langVal}')">↻ 반복</button>
+                        <button onclick="speakText('${item.word.replace(/'/g, "\\'")}', '${langVal}')">▶ 듣기</button>
+                        <button onclick="repeatSpeak('${item.word.replace(/'/g, "\\'")}', '${langVal}')">↻ 반복</button>
                     </div>
                 </div>
                 <div class="writing-area">
