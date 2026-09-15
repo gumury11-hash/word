@@ -519,6 +519,8 @@
     let userApiKey = "";
     let currentLoadedWords = [];
     let currentActiveHistoryId = null;
+    const SHARED_API_KEY_STORAGE = "gemini_api_key";
+    const LEGACY_API_KEY_STORAGE = "gemini_flash_lite_key";
 
     const studyTypeMap = {
         word: { label: '단어', build: (items) => items },
@@ -545,7 +547,12 @@
     }
 
     window.onload = function() {
-        const savedKey = localStorage.getItem("gemini_flash_lite_key");
+        const savedKey = localStorage.getItem(SHARED_API_KEY_STORAGE)
+            || localStorage.getItem(LEGACY_API_KEY_STORAGE);
+        // 기존 단어학습 전용 키가 있으면 공용 키로 자동 이전
+        if (savedKey && !localStorage.getItem(SHARED_API_KEY_STORAGE)) {
+            localStorage.setItem(SHARED_API_KEY_STORAGE, savedKey);
+        }
         // 1) prefer saved key in localStorage
         if (savedKey) {
             userApiKey = savedKey;
@@ -555,7 +562,7 @@
             const urlKey = getQueryParam('apiKey');
             if (urlKey) {
                 userApiKey = urlKey;
-                localStorage.setItem("gemini_flash_lite_key", userApiKey);
+                localStorage.setItem(SHARED_API_KEY_STORAGE, userApiKey);
                 applyRegisteredState();
             } else {
                 applyUnregisteredState();
@@ -571,7 +578,7 @@
                 if (data && data.type === 'setApiKey' && data.key) {
                     userApiKey = String(data.key).trim();
                     if (userApiKey) {
-                        localStorage.setItem('gemini_flash_lite_key', userApiKey);
+                        localStorage.setItem(SHARED_API_KEY_STORAGE, userApiKey);
                         applyRegisteredState();
                         alert('외부에서 API 키를 받아 등록했습니다.');
                     }
@@ -666,7 +673,7 @@
             return;
         }
         userApiKey = inputVal;
-        localStorage.setItem("gemini_flash_lite_key", userApiKey);
+        localStorage.setItem(SHARED_API_KEY_STORAGE, userApiKey);
         applyRegisteredState();
         alert("API 키가 등록되었습니다.");
     }
@@ -687,7 +694,7 @@
             // if it looks like an API key, auto-save
             if (trimmed.startsWith('AIza') || trimmed.length > 30) {
                 userApiKey = trimmed;
-                localStorage.setItem("gemini_flash_lite_key", userApiKey);
+                localStorage.setItem(SHARED_API_KEY_STORAGE, userApiKey);
                 applyRegisteredState();
                 alert('클립보드에서 API 키를 붙여넣고 등록했습니다.');
             } else {
